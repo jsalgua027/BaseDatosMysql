@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS impartir (
     codDepto INT UNSIGNED NOT NULL,
     codProf INT UNSIGNED NOT NULL,
     observaciones VARCHAR(100),
+    constraint pk_impartir primary key(codAsig, codDepto,codProf),
     CONSTRAINT fk_impartir_asignaturas FOREIGN KEY (codAsig)
         REFERENCES asignaturas (codAsig)
         ON DELETE NO ACTION ON UPDATE CASCADE,
