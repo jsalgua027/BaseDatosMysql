@@ -121,3 +121,47 @@ CREATE TABLE IF NOT EXISTS detalleturno (
         REFERENCES seguridad(codsegur)
         ON DELETE NO ACTION ON UPDATE CASCADE
 );
+
+
+
+
+/*
+1.- Se ha decidido añadir un campo (jubilacion) en la tabla empleados de forma que cuando un
+empleado se jubile, en lugar de borrar los datos de dicho empleado, se mantendrá en nuestra base de
+datos pero se almacenará en el nuevo campo la fecha de jubilación.
+*/
+alter table empleados
+add fecjubilacion date null;
+
+/*
+5.- Por cuestiones de organización, se ha decidido crear una tabla nueva “obrasmasbuscadas” para
+almacenar datos sobre obras que el museo desea adquirir. Nos interesa guardar el nombre y el autor.
+*/
+create table if not exists obrasmasbuscadas
+(
+nomObraMas varchar(30),
+nomAutorMas varchar(30),
+constraint PK_obrasmasbuscadas primary key (nomObraMas)
+);
+
+alter table obras
+add column nomObraMas varchar(30);
+alter table obras
+add constraint fk_obras_obrasmasbuscadas foreign key (nomObrasMas)
+references obrasmasbuscadas  (nomObrasMas)
+on delete no action on update cascade;
+
+
+/*
+6.- Debemos añadir a la tabla anterior el estilo, tipo de obra y el valor estimado de compra. Incluir
+las restricciones que consideres necesarias.
+*/
+
+/*
+7.- Elimina las restricciones de la tabla anterior.
+*/
+
+/*
+8.- Elimina la tabla anterior.
+*/
+

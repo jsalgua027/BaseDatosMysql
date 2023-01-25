@@ -50,3 +50,7 @@ create table if not exists IMPARTEN
 
 );
 
+/*Actividad 2.1: Modifica ahora el nombre de la restricción asociada a la relación “JEFES”, llámale
+“cf_jefes”*/
+alter table PROFESORES
+rename column idjefe to cf_jefes;
