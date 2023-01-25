@@ -105,3 +105,19 @@ create table if not exists restauraciones
     detalle turno es la antigua relacion vigilan 
     
     */
+    alter table seguridad
+    drop constraint  fk_seguridad_salas;
+    
+CREATE TABLE IF NOT EXISTS detalleturno (
+    codsala INT UNSIGNED,
+    codsegur INT UNSIGNED,
+    fechaIniturno DATE,
+    fechaFinturno DATE,
+    CONSTRAINT PK_seguridad PRIMARY KEY (codsala , codsegur),
+    CONSTRAINT FK_seguridad_salas FOREIGN KEY (codsala)
+        REFERENCES salas(codsala)
+        ON DELETE NO ACTION ON UPDATE CASCADE,
+    CONSTRAINT FK_seguridad_seguridad FOREIGN KEY (codsegur)
+        REFERENCES seguridad(codsegur)
+        ON DELETE NO ACTION ON UPDATE CASCADE
+);
