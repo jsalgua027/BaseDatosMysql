@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS LINVENTAS (
   
     codVenta INT NOT NULL,
     cantidad INT NOT NULL,
+    preciobase_a_venta decimal (10,2),-- desnormalizacion para saber los precios cuando se vendieron
+    precioventa_a_venta decimal (10,2),
     CONSTRAINT PK_LINVENTAS PRIMARY KEY (refprod  ),
     CONSTRAINT FK_LINVENTAS_PRODUCTOS FOREIGN KEY (refprod )
         REFERENCES PRODUCTOS (refprod)

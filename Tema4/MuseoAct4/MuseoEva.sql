@@ -106,21 +106,35 @@ create table if not exists restauraciones
     
     */
     alter table seguridad
+    drop column codsala,
     drop constraint  fk_seguridad_salas;
+    
+    create table turnos
+    (
+    codTurno int unsigned,
+    tipoTurno varchar(6),
+    constraint pk_turnos primary key (codTurno)
+    
+    );
     
 CREATE TABLE IF NOT EXISTS detalleturno (
     codsala INT UNSIGNED,
+    codTurno int unsigned,
     codsegur INT UNSIGNED,
-    fechaIniturno DATE,
-    fechaFinturno DATE,
-    CONSTRAINT PK_seguridad PRIMARY KEY (codsala , codsegur),
+    fechaIniturno date,
+    fechaFinturno date,
+    CONSTRAINT PK_seguridad PRIMARY KEY (codsala , codsegur, codTurno, fechaIniturno),
     CONSTRAINT FK_seguridad_salas FOREIGN KEY (codsala)
         REFERENCES salas(codsala)
         ON DELETE NO ACTION ON UPDATE CASCADE,
     CONSTRAINT FK_seguridad_seguridad FOREIGN KEY (codsegur)
         REFERENCES seguridad(codsegur)
+        ON DELETE NO ACTION ON UPDATE CASCADE,
+         CONSTRAINT FK_seguridad_turnos FOREIGN KEY (codTurno)
+        REFERENCES turnos(codTurno)
         ON DELETE NO ACTION ON UPDATE CASCADE
 );
+
 
 
 
@@ -143,14 +157,21 @@ nomObraMas varchar(30),
 nomAutorMas varchar(30),
 constraint PK_obrasmasbuscadas primary key (nomObraMas)
 );
-
+/*
+alter table restauradores
+drop foreign key fk_restauradores_empleados,
+add constraint fk_restauradores_empleados foreign key (codemple)
+references empleados (codemple)
+on delete no action on update cascade;
+*/
+/*
 alter table obras
 add column nomObraMas varchar(30);
 alter table obras
 add constraint fk_obras_obrasmasbuscadas foreign key (nomObrasMas)
 references obrasmasbuscadas  (nomObrasMas)
 on delete no action on update cascade;
-
+*/
 
 /*
 6.- Debemos añadir a la tabla anterior el estilo, tipo de obra y el valor estimado de compra. Incluir
@@ -164,4 +185,15 @@ las restricciones que consideres necesarias.
 /*
 8.- Elimina la tabla anterior.
 */
+CREATE TABLE IF NOT EXISTS departamentos (
+    codDepto INT UNSIGNED,
+    nomDept VARCHAR(30),
+    CONSTRAINT pk_departamentos PRIMARY KEY (codDepto)
+);
+
+alter table empleados 
+add column  codDepto INT UNSIGNED,
+add constraint fk_empleados_departamentos foreign key(codDepto)
+references departamentos (codDepto)
+on delete no action on update cascade;
 
