@@ -196,4 +196,32 @@ add column  codDepto INT UNSIGNED,
 add constraint fk_empleados_departamentos foreign key(codDepto)
 references departamentos (codDepto)
 on delete no action on update cascade;
+/*** CAMBIOS EN FOREIGN KEY  ****/
 
+/* A. Queremos que si se elimina un empleado,
+      se elimine el
+      restaurador/vigilante relacionado
+      
+       en la tabla empleado 
+      on delete cascade on update cascade
+      
+*/
+
+/* B. No vamos a permitir que se modifique
+    el código de estilo
+      de una obra, en todo caso se le asignará el valor nulo
+      en la tabla estilo
+      la fk_codobra
+      on delete no action on update set null
+*/
+/* C. Vamos a permitir que se eliminen artistas, en este caso
+      las obras se quedarán sin autor
+      en la tabla obras 
+      fk_codartita
+      on delete cascade on update cascade
+*/
+
+/* D. Vamos a permitir que se eliminen artistas, en este caso
+      las obras se quedarán sin autor, pero, una vez que demos
+    de alta una obra, el código de artista no podrá cambiar
+*/
