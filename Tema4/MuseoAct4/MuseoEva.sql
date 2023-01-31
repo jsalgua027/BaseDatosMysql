@@ -157,13 +157,13 @@ nomObraMas varchar(30),
 nomAutorMas varchar(30),
 constraint PK_obrasmasbuscadas primary key (nomObraMas)
 );
-/*
+
 alter table restauradores
 drop foreign key fk_restauradores_empleados,
-add constraint fk_restauradores_empleados foreign key (codemple)
+add constraint fk_restauradores_empleado foreign key (codemple)
 references empleados (codemple)
 on delete no action on update cascade;
-*/
+
 /*
 alter table obras
 add column nomObraMas varchar(30);
@@ -204,6 +204,8 @@ on delete no action on update cascade;
       
        en la tabla empleado 
       on delete cascade on update cascade
+      
+      
       
 */
 
