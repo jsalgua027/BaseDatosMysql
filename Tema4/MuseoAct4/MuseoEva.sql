@@ -198,32 +198,56 @@ references departamentos (codDepto)
 on delete no action on update cascade;
 /*** CAMBIOS EN FOREIGN KEY  ****/
 
-/* A. Queremos que si se elimina un empleado,
-      se elimine el
-      restaurador/vigilante relacionado
-      
-       en la tabla empleado 
-      on delete cascade on update cascade
-      
-      
-      
+/* A. Queremos que si se elimina un empleado, 
+	  se elimine el 
+	  restaurador/vigilante relacionado
 */
 
-/* B. No vamos a permitir que se modifique
-    el código de estilo
-      de una obra, en todo caso se le asignará el valor nulo
-      en la tabla estilo
-      la fk_codobra
-      on delete no action on update set null
+alter table restauradores
+	drop foreign key fk_restaurador_emple,
+	add constraint fk_restauradores_empleados 
+		foreign key (codemple) references empleados (codemple) 
+			on delete cascade on update cascade;
+
+alter table seguridad
+	drop foreign key fk_restauradores_seguridad,
+	add constraint fk_restauradores_seguridad 
+		foreign key (codemple) references empleados (codemple) 
+			on delete cascade on update cascade;
+
+
+/* B. No vamos a permitir que se modifique 
+	el código de estilo
+	  de una obra, en todo caso se le asignará el valor nulo
 */
+
+
+
+alter table obras
+ 	 -- drop foreign key fk_obras_estilos_new,
+	drop foreign key fk_obras_estilos,
+	add constraint fk_obras_estilos foreign key (codestilo)
+		references estilos(codestilo)
+		on delete no action
+		on update SET NULL;
+
 /* C. Vamos a permitir que se eliminen artistas, en este caso
-      las obras se quedarán sin autor
-      en la tabla obras 
-      fk_codartita
-      on delete cascade on update cascade
+	  las obras se quedarán sin autor
 */
+
+alter table obras
+	drop foreign key fk_obras_artistas,
+	add constraint fk_obras_artistas foreign key (codartista)
+		references artistas(codartista)
+			on delete set null on update cascade;
 
 /* D. Vamos a permitir que se eliminen artistas, en este caso
-      las obras se quedarán sin autor, pero, una vez que demos
-    de alta una obra, el código de artista no podrá cambiar
+	  las obras se quedarán sin autor, pero, una vez que demos
+	de alta una obra, el código de artista no podrá cambiar
 */
+
+alter table obras
+	drop foreign key fk_obras_artistas,
+	add constraint fk_obras_artistas foreign key (codartista)
+		references artistas(codartista)
+			on delete set null on update no action;
