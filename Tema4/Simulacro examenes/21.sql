@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS sujetos (
     ape1sujeto VARCHAR(20) NOT NULL,
     ape2sujeto VARCHAR(20) NULL,
     dni CHAR(9) NOT NULL,
-    dirpostal CHAR(12) NULL,
-    email VARCHAR(50) UNIQUE NULL,
+    dirpostal varchar(100) NULL,
+    email VARCHAR(50) UNIQUE NULL,-- unique para que no repita
     tlfcontacto CHAR(12) NULL,
     CONSTRAINT pk_abogados PRIMARY KEY (codsujeto)
 );
@@ -44,7 +44,7 @@ create table if not exists clientela
      constraint pk_clientela primary key (codcli),
      constraint fk_clientela_sujetos foreign key (codsujeto)
      references sujetos (codsujeto)
-	on delete no action on update cascade
+	on delete cascade on update cascade -- pedido en el enunciado
 
 );
 
@@ -52,12 +52,13 @@ create table if not exists abogado
 (
 	codabogado int unsigned not null,
      codsujeto INT UNSIGNED NOT NULL,
-    numcolegiado int unsigned,
+    numcolegiado char(8),
      
      constraint pk_clientela primary key (codabogado),
      constraint fk_clientela_abogados foreign key (codabogado)
      references sujetos (codsujeto)
-	
+	on delete no action on update no action -- (abajo parte del enunciado del porque de esta restricción)
+  -- (Una vez asignado un sujeto a un abogado, no se podrá cambiar el identificador asociado.)
 
 );
 
@@ -82,7 +83,7 @@ CREATE TABLE IF NOT EXISTS casos (
         ON DELETE NO ACTION ON UPDATE CASCADE,
     CONSTRAINT fk_casos_clientela FOREIGN KEY (codcli)
         REFERENCES clientela (codcli)
-        ON DELETE NO ACTION ON UPDATE CASCADE
+        ON DELETE cascade ON UPDATE CASCADE-- pdeido en el enunciado
 );
 
 /*
@@ -98,12 +99,29 @@ CREATE TABLE IF NOT EXISTS AbogadosenCasos (
     codtipcaso INT UNSIGNED NOT NULL,
     codabogado INT UNSIGNED NOT NULL,
     fecinicio DATE NOT NULL,
-    numdias INT UNSIGNED NULL,
+    numdias tinyint UNSIGNED NULL,
     CONSTRAINT pk_AbogadosenCasos PRIMARY KEY (codcaso , codtipcaso , codabogado , fecinicio),
     CONSTRAINT fk_AbogadosenCasos_casos FOREIGN KEY (codcaso , codtipcaso)
         REFERENCES casos (codcaso , codtipcaso)
-        ON DELETE CASCADE ON UPDATE NO ACTION,
+        ON DELETE no action ON UPDATE  cascade,
     CONSTRAINT fk_abogado FOREIGN KEY (codabogado)
         REFERENCES abogado (codabogado)
-        ON DELETE CASCADE ON UPDATE NO ACTION
+        ON DELETE no action on update  cascade
 );
+alter table AbogadosenCasos
+drop foreign key fk_AbogadosenCasos_casos,
+drop primary key;
+
+alter table casos
+drop primary key,
+add column tipocaso set ('civil','Penal', 'Laboral', 'Familia') after codcaso,
+drop foreign key fk_casos_tipocasos;
+
+alter table AbogadosenCasos
+add constraint pk_abogadosencasos_new primary key (codcaso,codabogado,fecinicio),
+add constraint fk_abogadosencasos_new foreign key (codcaso)
+references casos(codcaso)
+on delete no action on update cascade,
+drop column codtipcaso;
+
+
