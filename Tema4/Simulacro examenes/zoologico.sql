@@ -100,9 +100,23 @@ constraint fk_estan_ejemplares foreign key (codejem)
 references ejemplares (codejem)
 on delete no action on update no action
 );
+/*
+Incluye el salario de los empleados que nunca será mayor de 5000 € y podrán incluir hasta dos decimales.
+ Para evitar errores no se admitirán valores negativos ni nulos. Ten en cuenta que ya hay datos almacenados.
+*/
+alter table empleados
+add column sueldo decimal (6,2) unsigned;
+/*
+Incluye la edad del ejemplar y su fecha de nacimiento (queremos saber también la hora en que nace un ejemplar).
+ Asegúrate de que, en el caso de la edad, se aprovecha bien el espacio, se trata de un campo que nunca excederá del valor 130.
+*/
+alter table ejemplares
+add column edaeje tinyint not null,
+add column fechaNaci date not null,
+add column horaNaci datetime not null;
+/*
+Vamos a convertir  la relación N:M que exite entre RECINTOS y EJEMPLARES en 2 relaciones 1:N
 
-
-
-
+*/
 
 
