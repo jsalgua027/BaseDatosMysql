@@ -65,8 +65,38 @@ CREATE TABLE IF NOT EXISTS promociones (
 );
 
 
+CREATE TABLE IF NOT EXISTS catalogosPromo (
+    codarticulo INT UNSIGNED NOT NULL,
+    codpromo INT UNSIGNED NOT NULL,
+    codevento INT UNSIGNED,
+    fechacata DATE,
+    CONSTRAINT pk_catalogosPromo PRIMARY KEY (codarticulo , codpromo , codevento),
+    CONSTRAINT fk_catalogosPromo_articulos FOREIGN KEY (codarticulo)
+        REFERENCES articulos (codarticulo)
+        ON DELETE CASCADE ON UPDATE NO ACTION,
+    CONSTRAINT fk_catalogosPromo_promociones FOREIGN KEY (codpromo , codevento)
+        REFERENCES promociones (codpromo , codevento)
+        ON DELETE CASCADE ON UPDATE NO ACTION
+);
 
+CREATE TABLE IF NOT EXISTS seAplican (
+    codtienda INT UNSIGNED NOT NULL,
+    codpromo INT UNSIGNED NOT NULL,
+    codevento INT UNSIGNED,
+    fechacata DATE,
+    CONSTRAINT pk_seAplicanPRIMARY  primary key (codtienda , codpromo , codevento),
+    CONSTRAINT fk_seAplican_tiendas FOREIGN KEY (codtienda)
+        REFERENCES tiendas (codtienda)
+        ON DELETE CASCADE ON UPDATE NO ACTION,
+    CONSTRAINT fk_seAplican_promociones FOREIGN KEY (codpromo , codevento)
+        REFERENCES promociones (codpromo , codevento)
+        ON DELETE CASCADE ON UPDATE NO ACTION
+);
 
+/*
+Convierte la relación N:M catalagosPromos en 2 relaciones 1:N. 
+El proceso debe hacerse teniendo en cuenta que hay datos y no debe perderse ninguna información.
 
+*/
 
 
