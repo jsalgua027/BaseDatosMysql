@@ -54,7 +54,7 @@ codrecin int unsigned not null,
   on delete cascade on update no action,
   constraint fk_recintos_cuidadores foreign key (codcuida)
   references cuidadores (codcuida)
-  on delete set null on update no action
+  on delete set null on update cascade
   
 
 
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS ejemplares (
     codvete INT UNSIGNED ,
     nomejem VARCHAR(30) UNIQUE NOT NULL,
     claseejem ENUM('peces', 'anfibios', 'reptiles', 'aves', 'mamiferos'),
-    tipoali ENUM('herbivora', 'carnivora', 'insectivora', 'fructivora'),
+    tipoali set('herbivora', 'carnivora', 'insectivora', 'fructivora'),
     CONSTRAINT pk_ejemplares PRIMARY KEY (codejem),
     CONSTRAINT fk_ejemplares_parentesco FOREIGN KEY (codpadre)
         REFERENCES ejemplares (codejem)
@@ -95,7 +95,8 @@ observaciones varchar(300) null,
 constraint pk_estan primary key(codrecin,codzona,fechaini, codejem),
 constraint fk_estan_recintos foreign key (codrecin,codzona)
 references recintos  (codrecin,codzona)
-on delete no action on update cascade,
+on delete no action on update no action, -- Si desapareciera un cuidador/a del sistema, los recintos asignados a dicho cuidador/a,  quedarán sin cuidador hasta que se reasignen.
+
 constraint fk_estan_ejemplares foreign key (codejem)
 references ejemplares (codejem)
 on delete no action on update no action
@@ -105,7 +106,7 @@ Incluye el salario de los empleados que nunca será mayor de 5000 € y podrán 
  Para evitar errores no se admitirán valores negativos ni nulos. Ten en cuenta que ya hay datos almacenados.
 */
 alter table empleados
-add column sueldo decimal (6,2) unsigned;
+add column sueldo decimal (6,2) unsigned default 900;-- le doy un valor por defecto para que no de error el null
 /*
 Incluye la edad del ejemplar y su fecha de nacimiento (queremos saber también la hora en que nace un ejemplar).
  Asegúrate de que, en el caso de la edad, se aprovecha bien el espacio, se trata de un campo que nunca excederá del valor 130.
