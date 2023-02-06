@@ -96,3 +96,11 @@ CREATE TABLE IF NOT EXISTS imparten (
         ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
+-- añadir al grupo una relacion 1:1 tratamos como 1:n siendo grupo
+
+alter table grupos
+add column   codprofe INT UNSIGNED NOT NULL,
+add column    codgrupo INT UNSIGNED NOT NULL,
+add constraint fk_grupos_profesores foreign key (codprofe,coddepto)
+references profesores (codprofe,coddepto)
+on delete cascade on update no action;
