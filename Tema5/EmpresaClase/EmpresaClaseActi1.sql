@@ -6,9 +6,9 @@ empleados(pk[numem], ...., [numce, numde]*)
 dirigir(pk[numem*, [numce,numde]*, fecinidir], fecfindir)
 
 */
-DROP DATABASE IF exists ejer_4_1;
-CREATE DATABASE if not exists EJER_4_1;
-USE EJER_4_1;
+DROP DATABASE IF exists empresaClaseAct1;
+CREATE DATABASE if not exists empresaClaseAct1;
+USE empresaClaseAct1;
 /* CREAMOS LAS TABLAS ==> EL ORDEN ES IMPORTANTE (INTEGRIDAD REFERENCIAL) */
 create table if not exists centros
     (numce int,
@@ -99,7 +99,7 @@ VALUES
     (111,20,'SECTOR INDUSTRIAL',11000,110,20);
 */
 insert into empleados
-(numem,numde,extelem,fecnaem,fecinem,salarem,comesin,numhiem,nomem,ape1em,ape2em)
+(numem,numde,extelem,fecnaem,fecinem,salarem,comisem,numhiem,nomem,ape1em,ape2em)
 VALUES
 (110,121,350,'1965-04-30','1985-03-15',1000,null,2,'PEPA','PEREZ',null ),
 (120,112,840,'1970-09-10','1995-10-01',1200,50,3,'JUAN', 'LOPEZ', null),
@@ -109,4 +109,26 @@ VALUES
 (180,110,505,'1971-02-11','1998-02-11',1967,NULL,5,'JUANA','RODRIGUEZ','PEREZ'),
 (190,121,350,'1969-01-22','1997-01-22',1174,NULL,0,'LUISA','GOMEZ',null),
 (210,100,200,'1964-02-24','1986-02-24',3000,NULL,3,'CESAR','PONS',NULL),
-(240,111,760,'1959-03-01','1987-03-01',2145,110,1,'MARIO','LASA',NULL);
+(240,111,760,'1959-03-01','1987-03-01',2145,10,1,'MARIO','LASA',NULL);
+
+select * from empleados;
+
+INSERT INTO centros
+    (numce, nomce, dirce)
+VALUES
+    (10, 'SEDE CENTRAL', 'C/ ALCALÁ 820, MADRID'),
+    (20, 'RELACIÓN CON CLIENTES', 'C/ ATOCHA 405, MADRID');
+    
+    INSERT INTO deptos
+    (numde, numce, nomde, presude, deptodepen, centrodepen)
+VALUES
+    (100, 10,'DIRECCIÓN GENERAL',129000,NULL,NULL),
+    (110, 20, 'DIRECCIÓN COMERCIAL', 15000, 100,10),
+    (111,20,'SECTOR INDUSTRIAL',90000,110,20),
+    (112,20,'SECTOR SERVICIOS',175000,110,20),
+    (120,10,'ORGANIZACION',50000,100,10),
+    (121,10,'PERSONAL',74000,120,10),
+    (122,10,'PROCESO DE DATOS',68000,120,10),
+    (130,10,'FINANZAS',85000,100,10);
+    
+    select * from deptos;
