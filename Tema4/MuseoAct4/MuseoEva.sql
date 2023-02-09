@@ -100,6 +100,10 @@ create table if not exists restauraciones
     
     );
     
+   
+
+    
+    
     /*
     crear tabla turnos que se concatena con salas y seguridad en la tabla detalle turno
     detalle turno es la antigua relacion vigilan 
@@ -136,7 +140,7 @@ CREATE TABLE IF NOT EXISTS detalleturno (
 );
 
 
-
+/*
 
 
 /*
@@ -205,6 +209,7 @@ on delete no action on update cascade;
 
 alter table restauradores
 	drop foreign key fk_restaurador_emple,
+	drop foreign key fk_restauradores_emple,
 	add constraint fk_restauradores_empleados 
 		foreign key (codemple) references empleados (codemple) 
 			on delete cascade on update cascade;
@@ -251,3 +256,7 @@ alter table obras
 	add constraint fk_obras_artistas foreign key (codartista)
 		references artistas(codartista)
 			on delete set null on update no action;
+            
+            
+
+            
