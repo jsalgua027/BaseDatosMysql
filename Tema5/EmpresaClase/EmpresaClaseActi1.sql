@@ -131,4 +131,4 @@ VALUES
     (122,10,'PROCESO DE DATOS',68000,120,10),
     (130,10,'FINANZAS',85000,100,10);
     
-    select * from deptos;
+    
