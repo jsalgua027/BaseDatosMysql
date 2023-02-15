@@ -481,8 +481,81 @@ select * from obras;
 
 -- 14 Nuestro museo ha adquirido “El Guernica” de Picasso y lo hemos situado en la sala 3.
 delete from obras
-where codobra = 0;
+where codobra=0;
 insert into obras
 values
 (codobra,nomobra,desobra,feccreacion,fecadquisicion,valoracion,codestilo,codtipobra,codubicacion,codartista),
   (10,'El Gernica','.....',null,'2023-02-15',900000,8,1,3,4);
+  
+  
+ -- 15 Ha habido un error, no hemos adquirido el cuadro del apartado anterior.
+  delete from obras
+  where codobra = 10;
+  
+  -- 16 Hemos adquirido “El Grito” de “Edvard Munch”. Este cuadro es de estilo “Expresionismo” Este cuadro se ubicará en la sala 5.
+  insert into artistas
+  values
+  (codartista,nomartista,biografia,edad, fecnacim),
+  (7,'Edavard Munch','....',19,'1789-02-10');
+  
+  
+  insert into obras
+values
+(codobra,nomobra,desobra,feccreacion,fecadquisicion,valoracion,codestilo,codtipobra,codubicacion,codartista),
+  (11,'El Grito','.....',null,'2023-02-15',900000,7,1,3,5);
+  
+ /*
+ 17 Vamos a contratar un nuevo restaurador “Gustavo Sánchez Gómez” especialista en Joan Miró
+del que no conocemos de momento más datos, pero tenemos que darlo de alta para asignarle la
+restauración de la obra “La Masía” de dicho artista. Esta obra pasará al despacho de
+restauración 2 mientras dure la restauración.
+ 
+ */ 
+   insert into empleados
+    value
+    (codemple,nomemle,ape1emple,ape2emple,fecincorp,tlfempleado,numsegsoc,fecjubilacion,codDepto),
+    (401,'GUSTAVO','SANCHEZ', 'GOMEZ','2023-02-15','-','-',null,1);-- SOLO SE PUEDE PONER A NULL APE2 Y FECJUBILA--> COMO LO SOLUCIONO
+  
+  insert into restauradores
+values 
+(codrestaurador,codemple, especialidad),
+(3,401,'JON MIRO');
+
+update obras -- cambio de ubicacion la obra para ponerla en una sala de restauracion
+set codubicacion=8
+where codobra=1;
+
+  insert into restauraciones
+    values
+    (codrestaurador,codobra,fecinirestauracion,fecfinrestauracion,observaciones),
+    (3,1,'2023-02-15', null,'......');  -- Ojo las observaciones las pongo asi porque no admite nulos
+/*
+18 Anota en el campo “observaciones” para el registro en el que hemos anotado la restauraci n de ṕ
+“La Masía” la ubicación que tenía el cuadro antes de comenzar la restauración, para saber
+donde devemos devolver dicha obra cuando terminemos con estos trabajos.
+
+*/
+
+update restauraciones
+set observaciones= 'la obra se encontraba en la sala 1'
+where codobra = 1;
+
+
+-- 19 Hemos terminado de restaurar la obra “La Masía”. Devuelve la obra a su lugar de origen.
+
+update obras   -- cambio ubicacion de la obra
+set codubicacion=1
+where codobra=1;
+
+update restauraciones
+set fecfinrestauracion= '2023-02-16' -- actualizo la fechar de fin de restauracion 
+where codobra=1;
+
+/*
+20 Por necesidades de espacio, hemos habilitado el almacén 2 como “Sala 6”. En esta sala vamos
+a ubicar “El tritón alado” y “El angel surrealista”. Asigna 2 guardias de seguiridad a esta sala.
+*/
+
+
+
+
