@@ -416,4 +416,73 @@ values
 (1,400, 'SALVADOR DALI'),
 (2,390, 'EXPRESIONISTAS');
 
-                
+	/*
+	11
+    Hoy hemos contratado a una nueva empleada de seguridad para sustituir al empleado 1 que
+también se jubila hoy. Sus datos son: Carmen Gómez Pérez, su núm. de la seg. social es
+“0000000000001”.
+    
+	como no existe ek empleado uno hago un insert---
+    si existises haría un update------
+       
+	*/
+    
+    /*
+    12
+Añade un campo “jubilacion” en la tabla de los empleados. Se trata de la fecha de jubilación de
+nuestros empleados, debe permitirse que tenga valores nulos, ya que solo se almacenará dicha
+fecha cuando un empleado se jubile.
+
+   Ya esta añadido el campo
+    
+    */
+    
+    /*
+    13 Hace una semana se jubiló el empleado 5(390), se trata de un restaurador. Las obras que tenía
+encargadas se le han asignado al restaurador 2 y se entiende que la fecha de fin de restauración
+para nuestro jubilado es la misma que la de jubilación. Por razones que se desconocen no se ha
+guardado la información referente a dicha jubilación, subsánalo.
+    
+    restaurador 1-->   (390,'AUGUSTO','GARCIA', NULL,'2023-02-15','95222222','12345','2040-02-01',1),
+   restaurador 2 --> (400,'CORNELIO','SANZ', NULL,'2023-02-15','95222222','12345','2040-02-01',1);
+    
+    */
+    
+    
+    insert into restauraciones
+    values
+    (codrestaurador,codobra,fecinirestauracion,fecfinrestauracion,observaciones),
+    (1,1,'2022-02-01','2024-02-01','....'),
+     (1,2,'2022-03-01','2024-02-01','....'),
+      (2,3,'2022-04-01','2024-02-01','....'),
+       (2,4,'2022-05-01','2024-02-01','....');
+       
+       select * from restauraciones;
+start transaction;
+UPDATE restauraciones 
+SET 
+    codrestaurador = 2
+WHERE
+    codobra = 1;
+UPDATE restauraciones 
+SET 
+    codrestaurador = 2
+WHERE
+    codobra = 2;
+update  empleados
+set fecjubilacion ='2024-02-01'
+where
+codemple=390;
+commit;
+
+  select * from restauraciones;
+  select * from empleados;
+select * from obras;
+
+-- 14 Nuestro museo ha adquirido “El Guernica” de Picasso y lo hemos situado en la sala 3.
+delete from obras
+where codobra = 0;
+insert into obras
+values
+(codobra,nomobra,desobra,feccreacion,fecadquisicion,valoracion,codestilo,codtipobra,codubicacion,codartista),
+  (10,'El Gernica','.....',null,'2023-02-15',900000,8,1,3,4);
