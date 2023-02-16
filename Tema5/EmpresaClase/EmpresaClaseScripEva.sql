@@ -230,15 +230,15 @@ año desde hoy y el módo de dirección es en Propiedad.
 
 insert into `departamentos`
 values
-(131,20,15000,100,'Publicidad');
+(132,20,15000,100,'Publicidad');
 
 insert  into `empleados`
 values
-(1000,131,930,'1967-06-12','2023-02-15',2000,150,2,'Rosa','Del Campo', 'Florido', null, null,null);
+(1000,132,930,'1967-06-12','2023-02-15',2000,150,2,'Rosa','Del Campo', 'Florido', null, null,null);
 
 insert into `dirigir`
 values
-( 131,1000,'2023-02-15','2024-02-15','p');
+( 132,1000,'2023-02-15','2024-02-15','p');
 
 
 /*
