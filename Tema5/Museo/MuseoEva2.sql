@@ -470,7 +470,7 @@ SET
 WHERE
     codobra = 2;
 update  empleados
-set fecjubilacion ='2024-02-01'
+set fecjubilacion ='2024-02-01' -- set jubolacion= date_sub(curdate(), interval 1 week)
 where
 codemple=390;
 commit;
@@ -538,7 +538,7 @@ donde devemos devolver dicha obra cuando terminemos con estos trabajos.
 
 update restauraciones
 set observaciones= 'la obra se encontraba en la sala 1'
-where codobra = 1;
+where codobra = 1 and fecfinrestauracion is a null;
 
 
 -- 19 Hemos terminado de restaurar la obra “La Masía”. Devuelve la obra a su lugar de origen.
