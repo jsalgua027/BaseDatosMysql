@@ -284,20 +284,13 @@ select * from `empleados`;
 
 */
 start transaction;
-update `empleados`
-set 
-numde=100
-where 
-numem=410;
-update `empleados`
-set 
-extelem='912'
-where 
-numem=410;
-update `empleados`
-set salarem= salarem+ ((salarem*10)/100)
-where 
-numem=410;
+UPDATE `empleados` 
+SET 
+    numde = 100,
+    extelem = '912',
+    salarem = salarem + ((salarem * 10) / 100) -- salarem=salarem*1.1 (salarem = salarem+salarem*0.10)
+WHERE
+    numem = 410;
 commit;
 
 select * from `empleados`;
