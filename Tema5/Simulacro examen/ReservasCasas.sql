@@ -510,4 +510,4 @@ Hemos decidido incrementar en un 10% el precio base de todas
 update `casas`
 set
 preciobase= preciobase+ preciobase*0.10
-where numbanio=3 or m2= 200;
+where numbanio=3 and m2= 200; -- se pone and porque son dos columnas diferentes de la misma fila; si fuese la misma columna seria or 
