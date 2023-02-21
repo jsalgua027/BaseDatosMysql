@@ -395,7 +395,7 @@ where codreserva=2450;
 insert into `devoluciones`
 values
 (numdevol,codreserva,importedevol),
-(2,2450,200.00);
+(226,2450,200.00);
 commit;
 
 /*
@@ -405,9 +405,10 @@ Hace unos días dimos de alta al propietario 520 con dos casas que dimos de alta
  no quiere que mantengamos sus datos. Haz las operaciones oportunas y explica en que circunstancias podemos hacer esto.
 
 */
+-- se puede hacer asi si las carateristicasdecsa tiene el delete cascade sino primero tengo que borrar las caracteriticasdecasa
 start transaction;
 delete from  `casas`
-where codcasa= 5640 or 5641;
+where codcasa= 5640 or codcasa=5641;
 delete from `propietario`
 where codcliente=520;
 commit;
@@ -470,7 +471,8 @@ Ten en cuenta que el cliente 456 ha hecho otras reservas con nosotros.
 */
 
 delete from `reservas`
-where codreserva=456 or fecreserva=curdate();
+where codreserva=456 and fecreserva=curdate(); 
+-- and para que se cumplan las dos  si pongo or borra todas las reservas 456 y  todas las reservas curdate() !! cagada
 
 
 /*
