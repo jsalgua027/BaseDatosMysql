@@ -14,3 +14,22 @@ Para la BD Empresa_clase descargada de la plataforma obtener las siguientes cons
 
 
 */
+
+-- ejemplos
+
+select numem, ape1em, ape2em, nomem
+from empleados
+where numde=110 or numde= 120
+order by  ape1em desc ,  ape2em desc,  nomem desc; -- desc orden descendente; por defecto es asc--> ascendente
+
+
+
+select numem, numem as NumEmpleado , ape1em, ape2em, nomem,
+concat(ape1em, ape2em, nomem),
+concat(ape1em, ape2em, nomem) as nombreCompleto1,
+concat(ape1em,' ',ape2em,' ',nomem)as nombreCompleto2,
+concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto3,
+concat_ws(' ',ape1em,ape2em,nomem)as nombreCompleto_ws
+from empleados
+where numde=110 or numde= 120
+order by  ape1em desc ,  ape2em desc,  nomem desc; 
