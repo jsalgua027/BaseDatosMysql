@@ -64,7 +64,7 @@ where comisem=0;
 -- 6.Obtener la dirección del centro de trabajo “Sede Central”.
 select dirce
 from centros
-where nomce='Sede Central';
+where nomce=' Sede Central';
 
 -- 7.Obtener el nombre de los departamentos que tienen más de 6000 € de presupuesto.
 select nomde, presude
@@ -86,3 +86,31 @@ where curdate()-fecinem>1;
 select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, fecinem
 from empleados
 where (curdate()-fecinem>0) and (curdate()-fecinem<3) ;
+
+
+
+/*
+
+EJEMPLO DE PROCEDIMIENTO
+
+select extelem
+from empleados
+where nomem= 'Juan' and ape1em= 'Lopez';
+
+*/
+-- EJERCICIO 2 EN UN PROCEDIMIENTO
+delimiter $$
+drop procedure if exists muestraExtension $$
+create procedure muestraExtension 
+	(nombre varchar(60),
+    ape1 varchar(60)
+    )
+	begin
+    select extelem
+from empleados
+where nomem= nombre and ape1em= ape1;
+    
+    end $$
+delimiter ;
+
+call muestraExtension('Juan', 'Lopez');
