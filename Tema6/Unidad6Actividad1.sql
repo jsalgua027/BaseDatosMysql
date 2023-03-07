@@ -114,3 +114,35 @@ where nomem= nombre and ape1em= ape1;
 delimiter ;
 
 call muestraExtension('Juan', 'Lopez');
+
+
+/*
+
+11.Prepara un procedimiento almacenado que ejecute la consulta del apartado 1 y otro que ejecute la del apartado 5.
+12.Prepara un procedimiento almacenado que ejecute la consulta del apartado 2
+ de forma que nos sirva para averiguar la extensión del empleado que deseemos en cada caso.
+13.Prepara un procedimiento almacenado que ejecute la consulta del apartado 3 y
+ otro para la del apartado 4 de forma que nos sirva para averiguar el nombre de aquellos que tengan el número de hijos que deseemos en cada caso.
+14.Prepara un procedimiento almacenado que, dado el nombre de un centro de trabajo, nos devuelva su dirección.
+15.Prepara un procedimiento almacenado que ejecute la consulta del apartado 7 de forma que nos sirva para averiguar,
+ dada una cantidad, el nombre de los departamentos que tienen un presupuesto superior a dicha cantidad.
+16.Prepara un procedimiento almacenado que ejecute la consulta del apartado 8 de forma que nos sirva para averiguar,
+ dada una cantidad, el nombre de los departamentos que tienen un presupuesto igual o superior a dicha cantidad.
+17.Prepara un procedimiento almacenado que ejecute la consulta del apartado 9 de forma que nos sirva para averiguar, 
+dada una fecha, el nombre completo y en una sola columna de los empleados que llevan trabajando con nosotros desde esa fecha.
+
+*/
+
+-- 11.Prepara un procedimiento almacenado que ejecute la consulta del apartado 1 y otro que ejecute la del apartado 5.
+delimiter $$
+drop procedure if  exists apartado1 $$
+create procedure apartado1
+  (tabla varchar(60))
+  begin
+  select *
+  from tabla;
+  
+end $$
+delimiter ;
+
+call apartado1(empleados)
