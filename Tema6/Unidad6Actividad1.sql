@@ -48,28 +48,38 @@ where nomem= 'Juan' and ape1em= 'Lopez';
 -- 3.Obtener el nombre completo de los empleados que tienen más de un hijo.
 select nomem , ape1em, ape2em, numhiem as numeroHijos
 from empleados
+-- where ifnull(numhiem,0) < 1;
 where numhiem>1;
+
 
 -- 4.Obtener el nombre completo y en una sola columna de los empleados que tienen entre 1 y 3 hijos.
 
 select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, numhiem as numeroHijos
 from empleados
-where numhiem>0 and numhiem<4;
+where numhiem between 1 and 3; -- es más eficiente
+-- where numhiem>0 and numhiem<4; otra opcion
+-- where ifnull(numhiem,0) not between 1 and 3; -- nos quedamos con todos los que el numhiem esté fuera del rango (1,3)
+-- where ifnull(numhiem,0) <1 or numhiem >3;
 
 -- 5.Obtener el nombre completo y en una sola columna de los empleados sin comisión.
 select concat_ws(' ',ape1em,ape2em,nomem)as nombreCompleto
 from empleados
-where comisem=0;
+where ifnull(comisem,0) = 0;
 
 -- 6.Obtener la dirección del centro de trabajo “Sede Central”.
 select dirce
 from centros
-where nomce=' Sede Central';
+-- where nomce=' Sede Central';
+-- El anterior no obtiene resultados porque los nombres
+-- de centro tienen espacios en blanco
+-- para quitar los espacios usamos ltrim y rtrim:
+-- where rtrim(ltrim(centros.nomce)) = 'Sede Central';
+where lower(trim(nomce)) = 'sede central';
 
 -- 7.Obtener el nombre de los departamentos que tienen más de 6000 € de presupuesto.
 select nomde, presude
 from deptos
-where presude>6000;
+where presude<>6000;
 
 -- 8.Obtener el nombre de los departamentos que tienen de presupuesto 6000 € o más.
 
@@ -81,11 +91,18 @@ where presude>=6000;
 select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, fecinem
 from empleados
 where curdate()-fecinem>1;
+-- where fecinem <= date_sub(curdate(), interval 1 year);
+-- where fecinem <= subdate(curdate(), interval 1 year);
+-- where fecinem <= adddate(curdate(), interval -1 year);
+-- where fecinem <= date_add(curdate(), interval -1 year);
 
 -- 10.Obtener el nombre completo y en una sola columna de los empleados que llevan trabajando en nuestra empresa entre 1 y tres años. (Añade filas nuevas para poder comprobar que tu consulta funciona).
 select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, fecinem
 from empleados
 where (curdate()-fecinem>0) and (curdate()-fecinem<3) ;
+-- where fecinem >= '2018/2/14' and fecinem <= '2021/2/14';
+-- where fecinem between '2018/2/14' and '2021/2/14';
+-- where fecinem between date_sub(curdate(), interval 3 year) and date_sub(curdate(), interval 1 year);
 
 
 
@@ -145,4 +162,24 @@ create procedure apartado1
 end $$
 delimiter ;
 
-call apartado1(empleados)
+call apartado1('empleados');
+
+/*
+select concat_ws(' ',ape1em,ape2em,nomem)as nombreCompleto
+from empleados
+where ifnull(comisem,0) = 0;
+
+*/
+
+delimiter $$
+drop procedure if exists apartado5 $$
+create procedure apartado5
+(comision decimal(4,2))
+begin
+select concat_ws(' ',ape1em,ape2em,nomem)as nombreCompleto
+from empleados
+where ifnull(comisem,0) = comision;
+end $$
+delimiter ;
+
+call apartado5(0);
