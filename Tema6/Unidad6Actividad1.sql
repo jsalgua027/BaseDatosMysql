@@ -153,16 +153,15 @@ dada una fecha, el nombre completo y en una sola columna de los empleados que ll
 -- 11.Prepara un procedimiento almacenado que ejecute la consulta del apartado 1 y otro que ejecute la del apartado 5.
 delimiter $$
 drop procedure if  exists apartado1 $$
-create procedure apartado1
-  (tabla varchar(60))
+create procedure apartado1()
   begin
   select *
-  from tabla;
+  from empleados;
   
 end $$
 delimiter ;
 
-call apartado1('empleados');
+call apartado1();
 
 /*
 select concat_ws(' ',ape1em,ape2em,nomem)as nombreCompleto
