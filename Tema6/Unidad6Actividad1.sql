@@ -182,3 +182,164 @@ end $$
 delimiter ;
 
 call apartado5(0);
+/*
+12.Prepara un procedimiento almacenado que ejecute la consulta del apartado 2
+ de forma que nos sirva para averiguar la extensión del empleado que deseemos en cada caso
+select extelem
+from empleados
+where nomem= 'Juan' and ape1em= 'Lopez';
+*/
+delimiter $$
+drop procedure if exists apartado2 $$
+create procedure apartado2
+(nombre varchar(60), apellido varchar(60))
+begin
+select extelem
+from empleados
+where nomem=nombre and ape1em= apellido;
+end $$
+delimiter ;
+
+call apartado2('Juan','Lopez');
+
+/*
+13.Prepara un procedimiento almacenado que ejecute la consulta del apartado 3 y
+ otro para la del apartado 4 de forma que nos sirva para averiguar el nombre de aquellos que tengan el número de hijos que deseemos en cada caso.
+ 
+ -- 3.Obtener el nombre completo de los empleados que tienen más de un hijo.
+select nomem , ape1em, ape2em, numhiem as numeroHijos
+from empleados
+-- where ifnull(numhiem,0) < 1;
+where numhiem>1;
+
+-- 4.Obtener el nombre completo y en una sola columna de los empleados que tienen entre 1 y 3 hijos.
+
+select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, numhiem as numeroHijos
+from empleados
+where numhiem between 1 and 3; -- es más eficiente
+-- where numhiem>0 and numhiem<4; otra opcion
+-- where ifnull(numhiem,0) not between 1 and 3; -- nos quedamos con todos los que el numhiem esté fuera del rango (1,3)
+-- where ifnull(numhiem,0) <1 or numhiem >3;
+ 
+ 
+*/
+delimiter $$
+drop procedure if exists apartado3 $$
+create procedure apartado3
+( numeroHijos tinyint )
+begin
+select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, numhiem as numeroHijos
+from empleados
+where numhiem > numeroHijos;
+end $$
+delimiter ;
+
+call apartado3(1);
+
+delimiter $$
+drop procedure if exists apartado4 $$
+create procedure apartado4
+( numeroHijos tinyint )
+begin
+select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, numhiem as numeroHijos
+from empleados
+where numhiem = numeroHijos;
+end $$
+delimiter ;
+
+call apartado4(3);
+
+-- 14.Prepara un procedimiento almacenado que, dado el nombre de un centro de trabajo, nos devuelva su dirección.
+
+delimiter $$
+drop procedure if exists apartado6 $$
+create procedure apartado6
+( nombreCentro varchar(60))
+begin
+select dirce
+from centros
+where lower(trim(nomce)) = nombreCentro;
+end $$
+delimiter ;
+
+call apartado6('Sede central')
+
+/*
+15.Prepara un procedimiento almacenado que ejecute la consulta del apartado 7 de forma que nos sirva para averiguar,
+ dada una cantidad, el nombre de los departamentos que tienen un presupuesto superior a dicha cantidad.
+  -- 7.Obtener el nombre de los departamentos que tienen más de 6000 € de presupuesto.
+     select nomde, presude
+      where presude<>6000;
+
+*/
+
+delimiter $$
+drop procedure if exists apartado7 $$
+create procedure apartado7
+(presupuesto decimal(10,2))
+begin
+select nomde
+from deptos
+where presude > presupuesto;
+end $$
+delimiter ;
+
+call apartado7(6000);
+
+/*
+16.Prepara un procedimiento almacenado que ejecute la consulta del apartado 8 de forma que nos sirva para averiguar,
+ dada una cantidad, el nombre de los departamentos que tienen un presupuesto igual o superior a dicha cantidad.
+	-- 8.Obtener el nombre de los departamentos que tienen de presupuesto 6000 € o más.
+	select nomde, presude
+	from deptos
+	where presude>=6000;
+
+*/
+
+
+delimiter $$
+drop procedure if exists apartado8 $$
+create procedure apartado8
+(presupuesto decimal(10,2))
+begin
+select nomde
+from deptos
+where presude >= presupuesto;
+end $$
+delimiter ;
+
+call apartado8(6000);
+
+
+/*
+17.Prepara un procedimiento almacenado que ejecute la consulta del apartado 9 de forma que nos sirva para averiguar, 
+dada una fecha, el nombre completo y en una sola columna de los empleados que llevan trabajando con nosotros desde esa fecha.
+	-- 9.Obtener el nombre completo y en una sola columna de los empleados que llevan trabajando en nuestra empresa más de 1 año. (Añade filas nuevas para poder comprobar que tu consulta funciona).
+	select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, fecinem
+	from empleados
+	where curdate()-fecinem>1;
+	-- where fecinem <= date_sub(curdate(), interval 1 year);
+	-- where fecinem <= subdate(curdate(), interval 1 year);
+	-- where fecinem <= adddate(curdate(), interval -1 year);
+	-- where fecinem <= date_add(curdate(), interval -1 year);
+
+*/
+
+delimiter $$
+drop procedure if exists apartado9 $$
+create procedure apartado9
+(fecha date)
+begin
+select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, fecinem as fechaIngreso
+from empleados
+where fecinem> fecha;
+end $$
+delimiter ;
+
+select *  from empleados;
+
+call apartado9('2000-01-01');
+
+
+
+
