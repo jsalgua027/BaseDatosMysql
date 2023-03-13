@@ -132,6 +132,39 @@ delimiter ;
 
 call muestraExtension('Juan', 'Lopez');
 
+/*
+EJEMPLO DE FUNCION; DEVULVE UN VALOR
+
+*/
+
+delimiter $$
+drop function if exists devuelveExtension $$
+create function devuelveExtension 
+	(nombre varchar(60),
+    ape1 varchar(60)
+    )
+    returns char(3)
+	begin
+    declare extesion char(3);
+    -- devuelvo todo en la variable extension 
+    SET extension =( select extelem
+                    from empleados
+                    where nomem= nombre and ape1em= ape1 
+                   );
+		return extension;
+    
+ /* 
+ OTRA FORMA DE HACERLO
+ return ( select extelem
+            from empleados
+              where nomem= nombre and ape1em= ape1 
+              );
+  */  
+    end $$
+delimiter ;
+
+
+
 
 /*
 
