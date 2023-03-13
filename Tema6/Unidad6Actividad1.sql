@@ -88,7 +88,7 @@ from deptos
 where presude>=6000;
 
 -- 9.Obtener el nombre completo y en una sola columna de los empleados que llevan trabajando en nuestra empresa más de 1 año. (Añade filas nuevas para poder comprobar que tu consulta funciona).
-select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombreCompleto, fecinem
+select concat(ape1em,' ',ifnull(ape2em,''),' ',nomem)as nombmuestraExtensionreCompleto, fecinem
 from empleados
 where curdate()-fecinem>1;
 -- where fecinem <= date_sub(curdate(), interval 1 year);
