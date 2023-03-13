@@ -79,7 +79,7 @@ where lower(trim(nomce)) = 'sede central';
 -- 7.Obtener el nombre de los departamentos que tienen más de 6000 € de presupuesto.
 select nomde, presude
 from deptos
-where presude<>6000;
+where presude>6000;
 
 -- 8.Obtener el nombre de los departamentos que tienen de presupuesto 6000 € o más.
 
@@ -133,7 +133,7 @@ delimiter ;
 call muestraExtension('Juan', 'Lopez');
 
 /*
-EJEMPLO DE FUNCION; DEVULVE UN VALOR
+EJEMPLO DE FUNCION; DEVULVE UN VALOR , FUNCIONES SOLO DEVUELVEN UN VALOR
 
 */
 
@@ -143,10 +143,15 @@ create function devuelveExtension
 	(nombre varchar(60),
     ape1 varchar(60)
     )
-    returns char(3)
+    returns char(3) 
+    deterministic
 	begin
-    declare extesion char(3);
-    -- devuelvo todo en la variable extension 
+    declare extension char(3); -- declaro la variable 
+  /*  -- devuelvo todo en la variable extension 
+     select extelem into extension
+            from empleados
+             where nomem= nombre and ape1em= ape1 ;
+    */          
     SET extension =( select extelem
                     from empleados
                     where nomem= nombre and ape1em= ape1 
@@ -154,16 +159,60 @@ create function devuelveExtension
 		return extension;
     
  /* 
- OTRA FORMA DE HACERLO
+ OTRA FORMA DE HACERLO SIN DECLARAR LAS VARIABLES
  return ( select extelem
             from empleados
               where nomem= nombre and ape1em= ape1 
               );
   */  
+ 
+  
+  
     end $$
 delimiter ;
 
+select devuelveExtension('Juan', 'Lopez');
+set @miExtension = devuelveExtension('Juan', 'Lopez');
+select @miExtension;
 
+/*
+PARA QUE DEVUELVA MAS DE UN VALOR SE USA UN PROCEDIMIENTO
+SI SOLO DEVUELVE UN VALOR SE REALIZA UNA FUNCION
+
+*/
+delimiter $$
+drop procedure if exists DevExtensionProce $$
+create procedure DevExtensionProce
+	( in nombre varchar(60),
+      in ape1 varchar(60),
+      out extension char(3)
+    )
+	begin
+    set extension =(select extelem
+                    from empleados
+                 where nomem= nombre and ape1em= ape1);
+                 
+/*
+select extelem into extension
+            from empleados
+             where nomem= nombre and ape1em= ape1 ;
+
+*/
+    
+    end $$
+delimiter ;
+-- @miextension  es un parametro de salida usamos el @ y el nombre de la variable que queramos
+call DevExtensionProce('Juan', 'Lopez', @miextension);
+
+select @miextension;
+
+/*
+prepra una rutina (Procedimiento o funcion) 
+que muestre---> procedimiento
+que devuleva (Funcion o procedimiento)
+1 valor = funcion
++ de una valor = procedimiento
+*/
 
 
 /*
