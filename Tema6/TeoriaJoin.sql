@@ -53,7 +53,6 @@ WHERE
  SELECT 
     centros.nomce,
     departamentos.nomde,
-   
     empleados.numem,
     dirigir.numempdirec,
     empleados.nomem,
@@ -66,8 +65,10 @@ FROM
     empleados ON departamentos.numde = empleados.numde
         JOIN
     dirigir ON departamentos.numde = dirigir.numdepto
-		join empleados as e1 on dirigir.numempdirec= e1.numem -- clono la tablaa empleados para darle otro uso en la misma consulta
-    where fecfindir is null
+        JOIN
+    empleados AS e1 ON dirigir.numempdirec = e1.numem
+WHERE
+    fecfindir IS NULL
 ORDER BY nomce , nomde , empleados.nomem;
 
     
