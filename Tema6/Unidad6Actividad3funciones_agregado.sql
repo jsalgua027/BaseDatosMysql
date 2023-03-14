@@ -153,7 +153,7 @@ returns decimal(15,2)
  declare salaTotal decimal(15,2);
  
  set salaTotal = (  
-					select sum(salarem)
+					select sum(ifnull(salarem,0))
                     from empleados
                     where numde = numeroDepar
 					);
@@ -171,7 +171,7 @@ from empleados
 where numde = 112;
 
 select totalSalarios(112);
-set @total = totalSalarios(112);
+set @total = ifnull(totalSalarios(112),0);
 select @total; 
 
 -- 7.Prepara un procedimiento almacenado nos dé el presupuesto total de la empresa.
