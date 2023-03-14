@@ -20,3 +20,33 @@ Para la BD Empresa_clase descargada de la plataforma obtener las siguientes cons
 
 
 */
+
+
+/*
+2.Obtén de la plataforma un script con los datos de una tabla “empleados_temp”. 
+En esta tabla los datos de los salarios están actualizados. 
+Realiza las operaciones que consideres oportunas para actualizar,
+ en la tabla empleados los salarios de sus empleados por los de la tabla “empleados_temp”.
+*/
+
+-- 3.Obtener todos los datos de todos los empleados y el nombre del departamento al que pertenecen
+select
+	empleados.nomem,
+    empleados.ape1em,
+    empleados.extelem,
+    departamentos.nomde
+    
+    from empleados
+    join departamentos on departamentos.numde= empleados.numde;
+    
+    
+-- 4.Obtener la extensión telefónica y el nombre del centro de trabajo de “Juan López”.
+
+select
+	empleados.extelem,
+    centros.nomce
+    from empleados
+    join departamentos on departamentos.numde= empleados.numde
+    join centros on centros.numce= departamentos.numce
+    
+    where empleados.nomem = 'Juan' and empleados.ape1em= 'Lopez';
