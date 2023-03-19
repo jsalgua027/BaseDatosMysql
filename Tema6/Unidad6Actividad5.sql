@@ -35,7 +35,7 @@ TODOS LOS EJERCICIOS DEBEN HACERSE UTILIZANDO FUNCIONES ESCALARES DE MYSQL
 2.Se ha diseñado un sistema para que los proveedores puedan acceder a ciertos datos, 
 la contraseña que se les da es el teléfono de la empresa al revés. 
 Se pide elaborar un procedimiento almacenado que dado un proveedor obtenga su contraseña y la muestre en los resultados.
-2.Obtener el mes previsto de entrega para los pedidos que no se han recibido aún y para una categoría determinada.
+3.Obtener el mes previsto de entrega para los pedidos que no se han recibido aún y para una categoría determinada.
 4.Obtener un listado con todos los productos, ordenados por categoría, en el que se muestre solo las tres primeras letras de la categoría.
 5.Obtener el cuadrado y el cubo de los precios de los productos.
 6.Devuelve la fecha del mes actual.
@@ -90,6 +90,30 @@ delimiter ;
 
 call ejercicio2(1);
 
--- 2.Obtener el mes previsto de entrega para los pedidos que no se han recibido aún y para una categoría determinada.
+-- 3.Obtener el mes previsto de entrega para los pedidos que no se han recibido aún y para una categoría determinada.
+delimiter $$
+drop procedure if exists ejercicio3 $$
+create procedure ejercicio3
+(
+codigoCategoria int
+)
+begin 
+select month(fecentrega)
+from pedidos
+join
+productos on productos.codproducto = pedidos.codproducto
+join 
+categorias on productos.codcategoria = categorias.codcategoria
+where categorias.codcategoria= codigoCategoria or pedidos.fecentrega>date('1996-04-04');
+end$$
+delimiter ;
 
--- 454545454
+call ejercicio3(1);
+
+
+-- 4.Obtener un listado con todos los productos, ordenados por categoría, en el que se muestre solo las tres primeras letras de la categoría.
+select left(categorias.Nomcategoria,3) , productos.descripcion
+from productos
+join 
+categorias on productos.codcategoria = categorias.codcategoria
+order by categorias.codcategoria;
