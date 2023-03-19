@@ -92,4 +92,4 @@ call ejercicio2(1);
 
 -- 2.Obtener el mes previsto de entrega para los pedidos que no se han recibido aún y para una categoría determinada.
 
-
+-- 454545454
