@@ -131,7 +131,7 @@ from pedidos;
 
 
 -- !!!! 8.En el nombre de los productos, sustituir “tarta” por “pastel”. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-delimiter $$
+
 update productos
 set descripcion = replace(descripcion , 'tarta', 'pastel');
 
@@ -141,7 +141,16 @@ set descripcion = replace(descripcion , 'tarta', 'pastel');
 
 
 
+-- 10.Obtén el número de productos de cada categoría, haz que el nombre de la categoría se muestre en mayúsculas.!!!!!!!!!!
+SELECT 
+    COUNT(productos.codcategoria) AS NumeroDeProductos,
+    LOWER(categorias.Nomcategoria) AS nombre
+FROM
+    productos
+        JOIN
+    categorias ON categorias.codcategoria = productos.codcategoria;
 
 
+-- 11.Obtén un listado de productos por categoría y dentro de cada categoría del nombre de producto más corto al más largo.
 
 
