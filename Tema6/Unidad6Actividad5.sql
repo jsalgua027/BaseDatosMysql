@@ -117,3 +117,31 @@ from productos
 join 
 categorias on productos.codcategoria = categorias.codcategoria
 order by categorias.codcategoria;
+
+-- 5.Obtener el cuadrado y el cubo de los precios de los productos.
+select pow(productos.precioUnidad,2) as precioAlCuadrado ,  pow(productos.precioUnidad,3) as precioAlCubo
+from productos;
+
+-- 6.Devuelve la fecha del mes actual.
+select month(curdate()) as MesActual;
+
+-- !!!!!! NO SALE  7.Para los pedidos entregados el mismo mes que el actual, obtener cuantos días hace que se entregaron.  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+select datediff(month(now()), fecentrega) as Dias
+from pedidos;
+
+
+-- !!!! 8.En el nombre de los productos, sustituir “tarta” por “pastel”. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+delimiter $$
+update productos
+set descripcion = replace(descripcion , 'tarta', 'pastel');
+
+
+
+-- 9.Obtener la población del código postal (los primeros dos caracteres se refieren a la provincia y los tres últimos a la población).
+
+
+
+
+
+
+
