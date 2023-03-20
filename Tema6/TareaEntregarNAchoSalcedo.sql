@@ -51,10 +51,14 @@ from empleados
 where empleados.numem= numeroEmple
 
 );
-set numeroDirector =( select dirigir.numempdirec
+set numeroDirector =( select dirigir.numempdire
+/*
 from dirigir
 join empleados on empleados.numde = dirigir.numdepto
 where empleados.numem= numeroEmple
+*/
+from departamentos
+join empleados on  empleados.numde = departamentos.nomde
 );
 
 end$$
