@@ -42,11 +42,18 @@ select
     
 -- 4.Obtener la extensión telefónica y el nombre del centro de trabajo de “Juan López”.
 
-select
-	empleados.extelem,
-    centros.nomce
-    from empleados
-    join departamentos on departamentos.numde= empleados.numde
-    join centros on centros.numce= departamentos.numce
+SELECT 
+    empleados.extelem, centros.nomce
+FROM
+    empleados
+        JOIN
+    departamentos ON departamentos.numde = empleados.numde
+        JOIN
+    centros ON centros.numce = departamentos.numce
+WHERE
+    empleados.nomem = 'Juan'
+        AND empleados.ape1em = 'Lopez';
     
-    where empleados.nomem = 'Juan' and empleados.ape1em= 'Lopez';
+    
+-- 5.Obtener el nombre completo y en una sola columna de los empleados del departamento “Personal” y “Finanzas”.    
+
