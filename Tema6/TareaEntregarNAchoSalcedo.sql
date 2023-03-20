@@ -77,9 +77,9 @@ begin
 select empleados.nomem as nombre , departamentos.nomde as nombreDepartamento
 from 
 empleados 
-join  
+left join  
  dirigir on dirigir.numempdirec = empleados.numem
- join 
+right join 
  departamentos on dirigir.numdepto = empleados.numde;
 
 end$$
