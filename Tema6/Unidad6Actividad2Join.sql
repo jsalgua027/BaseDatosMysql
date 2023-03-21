@@ -208,4 +208,39 @@ FROM empleados join departamentos
 order BY nomde;
 
 
+-- 10.Obtener el nombre completo y en una sola columna de todos los directores que ha tenido el departamento cualquiera.
+delimiter $$
+drop procedure if exists apartado10_2$$
+create procedure  apartado10_2(in nombredepto VARCHAR(60))
+begin
+	select concat_ws(' ', empleados.nomem , empleados.ape1em, ifnull(empleados.ape2em, ' ')) as NombreCompleto
+	from departamentos 
+	   join dirigir on departamentos.numde = dirigir.numdepto
+	   join empleados on empleados.numem = dirigir.numempdirec
+	where departamentos.nomde =nombredepto
+	    	and ifnull(dirigir.fecfindir,curdate()) >= curdate();
+end$$
+delimiter ;
 
+call apartado10_2('Direccion General');
+
+
+-- version de eva modificada
+/* ejercicio 10, pero solo el director actual (lo devolveremos a través del parametro que es de entrada y de salida: 
+OJO ==> PARA SEGUNDO EXAMEN DE LA UNIDAD 5*/
+DROP PROCEDURE IF EXISTS ejer_5_2_10;
+DELIMITER $$
+CREATE PROCEDURE ejer_5_2_10(inout nombredepto VARCHAR(60))
+BEGIN
+	select CONCAT(empleados.ape1em, 
+				  ifnull(concat(' ', empleados.ape2em), ''),
+                  ', ', 
+                  empleados.nomem) into nombredepto
+	from departamentos join dirigir
+	on departamentos.numde = dirigir.numdepto
+		join empleados 
+			on empleados.numem = dirigir.numempdirec
+where departamentos.nomde =nombredepto
+	and ifnull(dirigir.fecfindir,curdate()) >= curdate();
+END $$
+DELIMITER ;
