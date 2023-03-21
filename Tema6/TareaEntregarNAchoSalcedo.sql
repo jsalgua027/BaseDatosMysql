@@ -14,7 +14,7 @@ create function apartado1
  numeroDep int
 
 )
-returns int
+returns decimal(10,2)
 deterministic
 begin
 declare resultado decimal(10,2);
@@ -42,24 +42,29 @@ create procedure apartado2
 (
  in numeroEmple int,
  out fechaIngreso date,
- out numeroDirector int
+ out director int
 )
 begin
-
+/*
+echo por mi con el numero de dirctor pero es incorrecto el numero de director
 set fechaIngreso = (select empleados.fecinem
 from empleados 
 where empleados.numem= numeroEmple
 
 );
 set numeroDirector =( select dirigir.numempdire
-/*
-from dirigir
-join empleados on empleados.numde = dirigir.numdepto
-where empleados.numem= numeroEmple
-*/
+
 from departamentos
 join empleados on  empleados.numde = departamentos.nomde
-);
+*/
+select fecinem
+dirigir,numempdirec
+	into fechaIngreso, director
+    from empleados join departamentos on empleados.numde=departamentos.numde
+    join dirigir on numde= dirigir.numdepto
+    where  numem= numeroEmple
+     -- and (dirigir.fecfinidir is null or dirigir.fecfindir>=curdate())
+;
 
 end$$
 delimiter ;
@@ -78,9 +83,9 @@ select empleados.nomem as nombre , departamentos.nomde as nombreDepartamento
 from 
 empleados 
 left join  
- dirigir on dirigir.numempdirec = empleados.numem
-right join 
- departamentos on dirigir.numdepto = empleados.numde;
+ dirigir on   empleados.numem = dirigir.numempdirec 
+left join 
+ departamentos on dirigir.numdepto = departamentos.numde;
 
 end$$
 delimiter ;
