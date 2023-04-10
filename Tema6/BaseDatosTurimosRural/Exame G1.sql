@@ -40,8 +40,7 @@ select  reservas.codreserva, concat_ws(' ', nomcli, ape1cli, ifnull(ape2cli,'No 
 		ifnull(importedevol, 'No tuvo anulación ') as ImporteDevolucion
 from reservas join clientes on reservas.codcliente = clientes.codcli 
       join devoluciones on reservas.codreserva = devoluciones.codreserva
-where reservas.fecanulacion= curdate();
-
+where year(reservas.fecanulacion)= year(curdate());
 
 end $$
 delimiter ;
