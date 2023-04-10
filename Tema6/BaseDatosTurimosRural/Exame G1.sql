@@ -47,5 +47,90 @@ delimiter ;
 
 call ejer2_simuExaG1 ();
 
+/*
+p3
+Prepara un procedimiento que, dado un código de característica,
+ muestre el código de casa, nombre,  
+ población y tipo de casa (nombre del tipo) de las casas que tienen esa característica.
+ Queremos mostrar los datos por poblaciones y, dentro de una población, las más caras (precio base) primero. 
+
+*/
+delimiter $$
+drop procedure if exists ejer3_simuExaG1 $$
+create procedure  ejer3_simuExaG1 
+	(
+   in codigoCaract int 
+    
+    )
+begin 
+select casas.codcasa, casas.nomcasa,casas.poblacion, tiposcasa.nomtipo
+from casas join tiposcasa on casas.codtipocasa = tiposcasa.numtipo
+		join caracteristicasdecasas on  casas.codcasa = caracteristicasdecasas.codcasa
+where caracteristicasdecasas.codcaracter = codigoCaract
+group by  casas.poblacion, casas.preciobase;
 
 
+end $$
+delimiter ;
+    
+call  ejer3_simuExaG1 (1);
+
+/*
+p4
+Prepara un procedimiento que, dado un código de zona,
+ muestre el listado de las casas de esa zona. Se mostrará en el listado el nombre de la casa y la población.
+*/
+ delimiter $$
+ drop procedure if exists ejer4_simuExaG1 $$
+ create procedure ejer4_simuExaG1 
+ (
+ in codigo int 
+ )
+ 
+ begin
+ select casas.nomcasa, casas.poblacion
+ from casas join zonas on casas.codzona = zonas.numzona
+ where zonas.numzona= codigo;
+ 
+ end $$
+ delimiter ;
+
+call  ejer4_simuExaG1 (1);
+
+/*
+p6
+
+Prepara un procedimiento que, dado el código de una reserva,
+ devuelva el número de teléfono del cliente que ha hecho dicha reserva y su nombre completo (todo junto).
+
+*/
+
+
+delimiter $$
+drop procedure if exists ejer6_simuExaG1 $$
+create procedure  ejer6_simuExaG1 
+	(
+	in codigo int,
+    out telefono char(13),
+    out nombreCompleto varchar(60)
+	)
+    /*
+    mi solucion
+begin
+	select clientes.tlf_contacto, concat_ws(' ', clientes.nomcli, clientes.ape1cli, ifnull(clientes.ape2cli, 'no tiene')) into telefono ,nombreCompleto
+    from reservas join clientes on reservas.codcliente = clientes.codcli
+    where reservas.codreserva= codigo;
+ */
+ begin
+	select clientes.tlf_contacto into telefono
+    from reservas join clientes on reservas.codcliente = clientes.codcli
+    where reservas.codreserva = reserva;
+end $$
+delimiter ;
+
+call  ejer6_simuExaG1 (1,@telefono, @nombre);
+select @telefono, @nombre;
+
+
+call  ejer6_simuExaG1 (1,@telefono);
+select concat('El teléfono del cliente es: ',ifnull(@telefono,'el cliente no tiene teléfono')) as consulta;
