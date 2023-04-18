@@ -74,7 +74,7 @@ begin
   from casas 
   where codcasa not in (select codcasa
 							from reservas 
-                            where fecanulacion is null and (adddate( fechainiestancia, interval reservas.numdiasestancia day )
+                            where fecanulacion is null and (adddate( feciniestancia, interval reservas.numdiasestancia day )
                             not between fechaI and fechaF or (feciniestancia between fechaI and fechaF))
 						     and casas.codzona = nzona 
                              );
@@ -83,4 +83,4 @@ begin
 end $$
 delimiter ;
 -- hay que anular la reserva para hacer la comprobacion
-call ejercicio40('2012/3/22','2012/3/30',1);
+call ejercicio40(1,'2012/3/22','2012/3/30');
