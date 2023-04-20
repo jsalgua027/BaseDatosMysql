@@ -233,12 +233,57 @@ delimiter $$
 drop procedure if exists eje7_4$$
 create procedure  eje7_4 ()
 begin
-select departamentos.numde
-from departamentos
-		join empleados on departamentos.numde = empleados.numde
-where
+select distinct numde
+from empleados
+		
+where empleados.comisem > empleados.salarem*0.20; 
 end$$
 delimiter ;
 
 call eje7_4();
+
+-- 8*Hallar por orden alfabético los nombres de los empleados tales que si se les da una gratificación de 100 u.m. por hijo el total de esta gratificación no supere a la décima parte del salario.
+
+delimiter $$
+drop procedure if exists eje8_4$$
+create procedure  eje8_4 ()
+begin
+select empleados.numem , empleados.ape1em, empleados.numhiem
+from empleados
+where numhiem >0 and numhiem*100 <= salarem/10
+order by empleados.numem , empleados.ape1em, empleados.numhiem asc;
+end$$
+delimiter ;
+
+call eje8_4();
+/*
+9*Llamaremos presupuesto medio mensual de un depto. al resultado de dividir su presupuesto anual por 12.
+ Supongamos que se decide aumentar los presupuestos medios de todos los deptos en un 10% a partir del mes de octubre inclusive.
+ Para los deptos. cuyo presupuesto mensual anterior a octubre es de más de 500.000 u.m.
+ Hallar por orden alfabético el nombre de departamento y su presupuesto anual total después del incremento.
+
+*/
+
+delimiter $$
+drop procedure if exists eje9_4$$
+create procedure  eje9_4 ()
+begin
+select departamentos.nomde,
+/*
+departamentos.presude as Anual,
+    departamentos.presude/12 as Mensual,
+    departamentos.presude/12*9 as hastaSep,
+     departamentos.presude/12*3 as Oct_Dic,
+       departamentos.presude/12*3*1.1 as IncrementoOct_dic
+*/
+	(departamentos.presude/12*9) +( departamentos.presude/12*3*1.1) as total
+from departamentos
+where departamentos.presude/12*9> 500000
+order by departamentos.nomde;   
+end$$
+delimiter ;
+
+call eje9_4();
+
+
 
