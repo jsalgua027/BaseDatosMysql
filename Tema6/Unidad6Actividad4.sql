@@ -74,7 +74,7 @@ begin
   from casas 
   where codcasa not in (select codcasa
 							from reservas 
-                            where fecanulacion is null and (adddate( feciniestancia, interval reservas.numdiasestancia day )
+                            where fecanulacion is null and (date_add( feciniestancia, interval reservas.numdiasestancia day )
                             not between fechaI and fechaF or (feciniestancia between fechaI and fechaF))
 						     and casas.codzona = nzona 
                              );
@@ -129,6 +129,8 @@ call ejercicio40(1,'2012/3/22','2012/3/30');
 38 Hallar cuantos empleados no tienen comisión en un centro dado.
 39 Hallar cuantos empleados no tienen comisión por cada centro de trabajo.
 40 Para la base de datos de turismo rural, queremos obtener las casas disponibles para una zona y un rango de fecha dados.
+
+
 */
 
 -- 1*Obtener por orden alfabético el nombre y los sueldos de los empleados con más de tres hijos.
@@ -226,4 +228,17 @@ delimiter ;
 
 call eje6_4();
 
+-- 7*Obtener los números de los departamentos en los que haya algún empleado cuya comisión supere al 20% de su salario.
+delimiter $$
+drop procedure if exists eje7_4$$
+create procedure  eje7_4 ()
+begin
+select departamentos.numde
+from departamentos
+		join empleados on departamentos.numde = empleados.numde
+where
+end$$
+delimiter ;
+
+call eje7_4();
 

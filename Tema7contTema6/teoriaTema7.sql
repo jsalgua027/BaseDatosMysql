@@ -104,5 +104,54 @@ create table centros_new
                         
                         and numde <> 100;                        
                         
-   -- busca empleados que ganen diferente  a los del depto 110                     
-                        
+   -- busca empleados que ganen diferente  a los del depto 110      
+   
+   
+   
+   
+   /*
+   
+   UNION
+   
+   */
+        -- usamos la base de datos    gestionProyectoss    tiene que tener el mismo numero de columnas y de valor (char,int,decimal)-->mismo dominio  
+        
+	select numcli, concat_ws(' ', nomcli, ape1cli, ape2cli), email
+		from clientes
+        union -- union distinct para que no salgan repetidos, union all para que salgan todos
+        select numcli, concat_ws(' ', nomem, ape1em, ape2em), dniem
+		from empleados;
+        
+        
+        /*
+        
+        view
+        creo tablas fijas ; no temporales con los datos que quiero para trabajar con ellos
+        */
+        drop view if exists invitados;
+        create view invitados
+			(numInvitado, nombreInvitado, emailInvitado)
+            as
+        select numcli, concat_ws(' ', nomcli, ape1cli, ape2cli), email
+		from clientes
+        union -- union distinct para que no salgan repetidos, union all para que salgan todos
+        select numcli, concat_ws(' ', nomem, ape1em, ape2em), dniem
+		from empleados;
+        
+        
+        /*
+        EJERCICIO PROPUESTO PARA BASE DE DATOS PROMOCIONES
+		preparar una vista que se llamara catalogoproductos que tenga la referecnia el artículo, código  y nombre categoría,  
+		nombre del artículo , el precio base y el precio de venta hoy
+                
+        */
+        
+        /*
+        para la bd empresaclase
+        prepara una vista que se llamará LISTINTELEFONICO 	en la qye cada usuario podrá consultar
+        la extensión telefonica de los empleados de su departamento.. (pista)--> necesitamos usar una funcion de mysql user()
+			el que crea la vista es el use definer
+            el sql security hay que ponerlo en invoker para que se actualice los datos
+        
+        */
+        
