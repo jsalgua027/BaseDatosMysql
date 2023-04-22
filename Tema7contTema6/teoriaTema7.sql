@@ -145,13 +145,41 @@ create table centros_new
 		nombre del artículo , el precio base y el precio de venta hoy
                 
         */
-        
+        drop view if exists CATALOGOPRODUCTOS;
+        create view  CATALOGOPRODUCTOS
+         (referenciaArt, codigoCat, nombreCat, nombreArticulo, precioBase, precioVentaHoy)-- , precioPromo)
+         as
+         select articulos.refart, articulos.codcat,categorias.nomcat, articulos.nomart, articulos.preciobase, articulos.precioventa
+         from articulos join categorias on articulos.codcat = categorias.codcat;
+         /*
+         union 
+         select ifnull( catalogospromos.precioartpromo ,'no esta en promocion')
+         from promociones;
+         */
+         
+         select * 
+         from  CATALOGOPRODUCTOS;
+         
         /*
         para la bd empresaclase
         prepara una vista que se llamará LISTINTELEFONICO 	en la qye cada usuario podrá consultar
         la extensión telefonica de los empleados de su departamento.. (pista)--> necesitamos usar una funcion de mysql user()
 			el que crea la vista es el use definer
-            el sql security hay que ponerlo en invoker para que se actualice los datos
-        
+           el sql security hay que ponerlo en invoker para que se actualice los datos
+                      
         */
+        
+        drop view if exists LISTINTELEFONICO;
+        create view  LISTINTELEFONICO 
+         ( nombreEmple, nombreDep, extension)
+         as
+         select  empleados.nomem, departamentos.nomde, empleados.extelem
+         from empleados join departamentos on empleados.numde= departamentos.numde
+          
+         where empleados.nomem = substring(user(),'@',-1)
+	     SQL SECURITY INVOKER;
+         
+         
+         
+        
         
