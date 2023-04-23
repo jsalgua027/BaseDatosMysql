@@ -6,10 +6,10 @@ pero solo nos interesan aquellos grupos de comisión en los que haya más de un 
  Solo nos interesan aquellos grupos en los que hay entre 1 y 3 empleados.
 
 	Para la base de datos de las promociones:
-1.Prepara un procedimiento que, dado un código de promoción obtenga un listado con el nombre de las categorías que tienen al menos dos productos incluidos en dicha promoción.
-2.Prepara un procedimiento que, dado un precio, obtenga un listado con el nombre de las categorías en las que el precio  medio de sus productos supera a dicho precio.
-3.Prepara un procedimiento que muestre el importe total de las ventas por meses de un año dado.
-4.Como el ejercicio anterior, pero ahora solo nos interesa mostrar aquellos meses en los que se ha superado a la media del año.
+3.Prepara un procedimiento que, dado un código de promoción obtenga un listado con el nombre de las categorías que tienen al menos dos productos incluidos en dicha promoción.
+4.Prepara un procedimiento que, dado un precio, obtenga un listado con el nombre de las categorías en las que el precio  medio de sus productos supera a dicho precio.
+5.Prepara un procedimiento que muestre el importe total de las ventas por meses de un año dado.
+6.Como el ejercicio anterior, pero ahora solo nos interesa mostrar aquellos meses en los que se ha superado a la media del año.
 
 
 */
@@ -36,7 +36,7 @@ having count(*) between 1 and 3;
 
 	-- Para la base de datos de las promociones:
 /*
-.Prepara un procedimiento que, 
+3.Prepara un procedimiento que, 
 dado un código de promoción obtenga un listado con el nombre de las categorías que tienen al menos dos productos incluidos en dicha promoción.
 
 */
@@ -56,5 +56,41 @@ delimiter ;
 
 call eje3_7(1);
 
+/*
+4.Prepara un procedimiento que, dado un precio, obtenga un listado con el nombre de las categorías
+ en las que el precio  medio de sus productos supera a dicho precio.
 
+*/
 
+delimiter $$
+drop procedure if exists eje4_7$$
+create procedure eje4_7
+( precio decimal(5,2))
+begin
+select categorias.nomcat as nombreCategoria
+from categorias join articulos on categorias.codcat = articulos.codcat
+group by categorias.codcat
+having avg(articulos.preciobase)< precio;
+end$$
+delimiter ;
+
+call eje4_7(2.50);
+
+/*
+5.Prepara un procedimiento que muestre el importe total de las ventas por meses de un año dado.
+*/
+
+delimiter $$
+drop procedure if exists eje5_7$$
+create procedure eje5_7
+( anio date)
+begin
+select sum(detalleventa.precioventa) 
+from detalleventa join ventas on detalleventa.codventa = ventas.codventa
+where year(ventas.fecventa)= year(anio)
+group by month(ventas.fecventa);
+
+end$$
+delimiter ;
+
+call eje5_7();
