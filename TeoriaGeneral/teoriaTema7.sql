@@ -189,7 +189,7 @@ create table centros_new
 		union all /* se repiten */
 		-- union  /* no se repiten */
 
-
+      /*
 select articulos.desarticulo, catalogospromos.precioventa
 
 from catalogospromos join promociones on catalogospromos.codpromo = promociones.codpromo	
@@ -211,7 +211,7 @@ from catalogospromos join promociones on catalogospromos.codpromo = promociones.
            el sql security hay que ponerlo en invoker para que se actualice los datos
                       
         */
-        
+        /*
         drop view if exists LISTINTELEFONICO;
         create view  LISTINTELEFONICO 
          ( nombreEmple, nombreDep, extension)
@@ -221,6 +221,38 @@ from catalogospromos join promociones on catalogospromos.codpromo = promociones.
           
          where empleados.nomem = substring(user(),'@',-1)
 	     SQL SECURITY INVOKER;
+         
+         */
+         -- vemaos la función user() que devuelve el usuario conectado:
+select user(),
+	locate('@', user()),
+	left(user(),locate('@', user())),
+    locate('@', user())-1;
+select left(user(),locate('@', user())-1);
+select version();
+-- POR TANTO:
+CREATE SQL SECURITY INVOKER
+VIEW LISTIN (Nombre , extension) AS
+    SELECT 
+        CONCAT(ape1em,
+                IFNULL(CONCAT(' ', ape2em), ''),
+                ', ',
+                nomem),
+        extelem
+    FROM
+        empleados
+    WHERE
+        numde = (SELECT 
+                numde
+            FROM
+                empleados
+            WHERE
+                userem = LEFT(USER(), LOCATE('@', USER()) - 1));
+
+-- cuando ejecutemos la siguiente sentencia conectados con el usuario 'eva', veremos los empleados del depto. 121
+-- cuando ejecutemos la siguiente sentencia conectados con el usuario 'prueba', veremos los empleados del depto. 110
+select *
+from LISTIN;
          
          
          
