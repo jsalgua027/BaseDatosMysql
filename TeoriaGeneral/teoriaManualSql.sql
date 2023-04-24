@@ -77,6 +77,9 @@ SELECT DATEDIFF('2022-05-15', '2022-04-10') AS dias_diferencia;
 
 La consulta anterior calculará la diferencia en días entre las dos fechas y mostrará el resultado en la columna "dias_diferencia". El resultado sería 35, lo que significa que hay 35 días de diferencia entre las dos fechas.
 
+!!!!En la relacion 4 ejercicio 40 tenemos las casas rulares y las que estan diposnibles jugando con las fechas
+
+
 ********************************************************************************** CONCATENAR NOMBRES
 select numem, numem as NumEmpleado , ape1em, ape2em, nomem,
 concat(ape1em, ape2em, nomem),
@@ -88,7 +91,7 @@ from empleados
 where numde=110 or numde= 120
 order by  ape1em desc ,  ape2em desc,  nomem desc; 
 
-************************************************************************** extraer subcadenas de un string
+************************************************************************** Extraer subcadenas de un string
 funciones parecidas a SUBSTRING() que permiten extraer subcadenas de una cadena
 
 LEFT(): Esta función devuelve una subcadena que contiene los primeros n caracteres de la cadena dada
@@ -108,6 +111,22 @@ MID(): Esta función es similar a SUBSTR() y permite extraer una subcadena de un
 pero en lugar de especificar la posición inicial y la longitud, se especifica la posición inicial y la posición final de la subcadena
 
 SELECT MID('Hola mundo', 3, 4);  -->"a mu"
+
+La función locate() devuelve la posición de la primera ocurrencia de la subcadena dentro de la cadena principal.
+ Si la subcadena no se encuentra en la cadena principal, la función devuelve 0.
+
+LOCATE(subcadena, cadena, posición_inicial)
+
+-subcadena: es la subcadena que se desea encontrar dentro de la cadena principal.
+-cadena: es la cadena principal dentro de la cual se buscará la subcadena.
+-posición_inicial (opcional): es la posición dentro de la cadena principal donde se comenzará la búsqueda de la subcadena. 
+Si no se especifica, la búsqueda comenzará en la posición 1.
+
+ !!!Ejercicio 6 del simulacro de examen tema 6 locale() y sub string
+
+--------------------------------------------------------OJO length
+length(concat(trim(nomcli), trim(ape1cli), ifnull(trim(ape2cli),'')))
+ devuelve la longitud total de la cadena resultante después de unir las tres columnas de la tabla de clientes.
 
 
 */
