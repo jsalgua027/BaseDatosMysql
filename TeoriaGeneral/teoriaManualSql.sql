@@ -48,6 +48,8 @@ Estos formatos se pueden usar con las funciones DATE_FORMAT() y STR_TO_DATE() pa
 
 Podemos usar la función DATE_FORMAT() para dar formato a la fecha en la consulta de esta manera:
 
+
+
 SELECT DATE_FORMAT(fecha_venta, '%d-%m-%Y') AS fecha_legible, monto
 FROM ventas
 WHERE monto > 100
