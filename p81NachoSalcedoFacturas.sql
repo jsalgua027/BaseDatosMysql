@@ -10,3 +10,8 @@ create table facturas
 
 
 );
+
+delete 
+ from facturas
+ where codigoUnico <51;
+ ;
