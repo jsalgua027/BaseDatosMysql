@@ -13,5 +13,5 @@ create table facturas
 
 delete 
  from facturas
- where codigoUnico <51;
+ where codigoUnico < 51;
  ;
