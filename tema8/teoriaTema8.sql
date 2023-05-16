@@ -3,7 +3,7 @@ tema 8 teoria
 
 ¿Tabla?
 ¿Operacion?
-¿Antes/despues?alter
+¿Antes/despues?after
 before--> control  / after-->operacion adicional
 
 
