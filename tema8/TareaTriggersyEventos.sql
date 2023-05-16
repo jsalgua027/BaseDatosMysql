@@ -190,4 +190,4 @@ create procedure borradoEmpleados(
     )
 begin 
 	delete empleados 
-		set numempledos = (select rest())
+	-- set numempledos = (select rest())
