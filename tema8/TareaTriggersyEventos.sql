@@ -275,7 +275,207 @@ end $$
 delimiter ;
 
 
+
+
+* ejercicio propuesto */
+
+/* 1. modificar la tabla articulos, añadiendo el campo stock,
+que contendrá el numero de articulos que hay en la tienda */
+
+alter table articulos
+	add column stock int not null default 0;
+/* 2. Actualizar la tabla artículos asgnando 10 unidades a los artículos
+ pares y 7 unidades a los impares */
+ 
+ /* probemos esto:
+ select refart, right(refart,2), mod(right(refart,2),2)
+from articulos;
+*/
+ 
+ update articulos
+	set stock = if (mod(right(refart,2),2)=0,10,7);
+/* haz que cuando se haga una venta de un artículo, se modifique
+automaticamente el stock 
+*/
+/*Veamos a que tabla, para que operación y como afecta:
+cuando se haga una venta de un artículo ==> los artículos de las ventas están en DETALLEVENTA
+										==> se trata de ventas nuevas ==> INSERT
+										==> ¿control de datos? ==> NO
+                                        ==> modificación de otros datos cuando se haga efectiva la venta ==> SI
+											==> AFTER
+		por tanto, se trata de hacer un trigger AFTER INSERT ON DETALLEVENTA  
+        
+        VALORES new y old en un trigger before|after insert
+		new ==> valores que se acaban de insertar en la tabla detalleventa 
+			(new.refart, new.cant, new.codventa, new.precioventa )
+        old ==> valores que tenían las columnas de la tabla detalleventa para la fila en cuestión
+				antes de la insercción (en las inserciones siempre es null y no se usarán)
+*/
+
+drop trigger if exists actualizastock;
+delimiter $$
+create trigger actualizastock
+		after insert on detalleventa
+for each row
+begin
+		update articulos
+			set stock = stock - new.cant
+		where refart = new.refart;
+end $$
+delimiter ;
+/* Comprueba también que si no hay suficiente stock no se permita la venta */
+/* 
+/*Veamos a que tabla, para que operación y como afecta:
+cuando se haga una venta de un artículo ==> los artículos de las ventas están en DETALLEVENTA
+										==> se trata de ventas nuevas ==> INSERT
+										==> ¿control de datos? ==> SI
+                                        ==> modificación de otros datos cuando se haga efectiva la venta ==> NO
+											==> BEFORE
+		por tanto, se trata de hacer un trigger BEFORE INSERT ON DETALLEVENTA  
+        
+        VALORES new y old en un trigger before|after insert
+		new ==> valores que se acaban de insertar en la tabla detalleventa 
+			(new.refart, new.cant, new.codventa, new.precioventa )
+        old ==> valores que tenían las columnas de la tabla detalleventa para la fila en cuestión
+				antes de la insercción (en las inserciones siempre es null y no se usarán)
+*/
+
+/*
+
+start transaction;
+		select ifnull(max(codventa),0) + 1 into @nuevaventa
+        from ventas;
+        
+        insert into ventas
+			(codventa, codcli, fecventa, codvende)
+		values
+			(@nuevaventa, @cliente, @fecha,@vendedor);
+		insert into detalleventa
+			(codventa, refart, cant, precioventa)
+		values
+			(@nuevaventa, 'c1_01',10,2.95), -- new.codventa = @nuevaventa; new.refart = 'c1_01'; new.cant = 10; new.precioventa=2.95
+            (@nuevaventa, 'c2_02',8,3.80); -- new.codventa = @nuevaventa; new.refart = 'c2_02'; new.cant = 8; new.precioventa=3.80
+	commit;
+*/
+drop trigger if exists compruebastock;
+delimiter $$
+create trigger compruebastock
+		before insert on detalleventa
+for each row
+begin
+	if (select stock from articulos where refart = new.refart) < new.cant then
+    begin
+		signal sqlstate '45000' set message_text = 'No se puede realizar la venta por falta de stock';
+    end;
+    end if;
+end $$
+delimiter ;
+
+/* VAMOS A COMPROBAR SI FUNCIONA */
+drop procedure if exists insertaVentaDosArticulos;
+delimiter $$
+create procedure insertaVentaDosArticulos
+(cliente int,
+ fecha date,
+ vendedor int,
+ articulo1 char(5),
+ cantidad1 int,
+ precio1 decimal(6,2),
+ articulo2 char(5),
+ cantidad2 int,
+ precio2 decimal(6,2)
+ )
+ begin
+	declare nuevaventa int;
+    declare exit handler for sqlstate '45000'
+		begin
+			rollback;
+        end;
+	start transaction;
+		select ifnull(max(codventa),0) + 1 into nuevaventa
+        from ventas;
+        
+        insert into ventas
+			(codventa, codcli, fecventa, codvende)
+		values
+			(nuevaventa, cliente, fecha,vendedor);
+		insert into detalleventa
+			(codventa, refart, cant, precioventa)
+		values
+			(nuevaventa, articulo1,cantidad1,precio1),
+            (nuevaventa, articulo2,cantidad2,precio2);
+	commit;
+ end $$
+ delimiter ;
+ select * from ventas;
+ select * from detalleventa;
+ select * from articulos;
+ 
+ call insertaVentaDosArticulos
+	(1,curdate(),1,'C1_01',5,2.95,'C1_02',12,3.99); -- el articulo 'C1_02' no tiene suficiente stock
+													-- se deshacen todos los cambios
+call insertaVentaDosArticulos
+	(1,curdate(),1,'C1_03',5,2.95,'C1_04',6,3.99); 
+
+/* Crear la tabla pedidos:
+	codpedido, fecpedido, fecentrega, codarticulo, cantidad */
+drop table if exists pedidos;
+create table pedidos
+	(codpedido int,
+	 fecpedido date not null,
+     fecentrega date null,
+     refart char(12),
+     cantidad int,
+     constraint pk_pedidos primary key (codpedido),
+     constraint fk_pedidos_articulos foreign key (refart) references articulos(refart)
+		on delete no action on update cascade
+	);
     
+/* Cuando hacemos una venta y el stock resultante es menor que 5
+   genera un pedido automático de 5 unidades */
+/* podemos hacer de nuevo el trigger after insert sobre detalleventa añadiendo que se haga el pedido
+	pero también podemos hacerlo sobre la tabla ARTICULOS
+		cuando se modifique el stock ==> UPDATE
+        , si este es menor que 5 ==> ¿ES DE CONTROL DE DATOS ? ==> NO
+								 ==> ¡ES DE MODIFICACIÓN DE OTROS DATOS AFECTADOS ==> SI
+	por tanto es un trigger AFTER UPDATE ON ARTICULOS
+    
+    en los triggers update:
+     old ==> valores previos a la modificación de la fila que se va a modificar en la tabla que se modifica
+     new ==> valores después de la modificación de la fila que se va a modificar en la tabla que se modifica
+*/
+drop trigger if exists pedidoautomatico;
+delimiter $$
+create trigger pedidoautomatico
+	after update on articulos
+for each row
+begin
+
+	/*
+    
+    
+    */
+	declare nuevopedido int;
+	-- solo queremos hacer el pedido automático cuando se haya modificado el stock
+    -- sino añadimos "old.stock <> new.stock" haríamos un pedido automatico para cualquier modificación en la tabla artículos
+    -- cuando el stock fuera menor que 5 (por ejemplo cuando modificáramos la descripción del artículo
+	if new.stock<5 and old.stock <> new.stock then
+	begin
+		select ifnull(max(codpedido),0)+1 into nuevopedido from pedidos;
+		insert into pedidos
+			(codpedido, fecpedido,fecentrega, refart, cantidad)
+		values
+			(nuevopedido, curdate(),null, new.refart, 5);
+	end;
+    end if;
+end $$
+delimiter ;
+
+-- probemos:
+update articulos
+	set stock = 3
+where refart = 'C2_01';
+ SELECT * FROM pedidos;
     
     
     

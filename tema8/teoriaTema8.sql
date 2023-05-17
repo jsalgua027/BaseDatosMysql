@@ -160,3 +160,34 @@ $: Representa el final de una cadena.
 
 
 */
+
+
+/*
+----------------------------------------------------------------------------------------CASE ejemplos
+
+SELECT column1,
+       CASE
+           WHEN column2 > 0 THEN 'Positivo'
+           WHEN column2 < 0 THEN 'Negativo'
+           ELSE 'Cero'
+       END AS status
+FROM table;
+
+SELECT column1,
+       CASE
+           WHEN column2 > 10 THEN 'Mayor a 10'
+           WHEN column2 > 5 THEN 'Mayor a 5'
+           ELSE 'Menor o igual a 5'
+       END AS status
+FROM table;
+
+SELECT column1,
+       CASE
+           WHEN column2 + column3 > 100 THEN 'Suma mayor a 100'
+           WHEN column2 * column3 > 50 THEN 'Producto mayor a 50'
+           ELSE 'No se cumple ninguna condición'
+       END AS status
+FROM table;
+
+
+*/
