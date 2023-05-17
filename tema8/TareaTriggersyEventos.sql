@@ -184,10 +184,98 @@ delimiter ;
 
 -- 7.Asegúrate de que cuando eliminemos a un empleado, se actualice el número de empleados del departamento al que pertenece dicho empleado.
 delimiter $$
-drop procedure if exists borradoEmpleados$$
-create procedure borradoEmpleados(
-    numeroEmpleado int
-    )
-begin 
-	delete empleados 
-	-- set numempledos = (select rest())
+drop trigger if exists borradoEmpleados$$
+create trigger borradoEmpleados
+ after delete on empleados   
+for each row
+begin
+	update departamentos
+    set numempleados = (select count(*) from empleados where numde = old.numde)
+    where numde = old.numde;
+end $$
+delimiter ;
+
+
+	/*
+    usar gestionatest
+    8.El profesorado también puede matricularse en nuestro centro pero no de las materias que imparte. Para ello tendrás que hacer lo sigjuiente:
+	a.Añade el campo dni en la tabla de alumnado.
+	b.Añade la tabla profesorado (codprof, nomprof, ape1prof, ape2prof, dniprof).
+	c.Añade una clave foránea en materias ⇒ codprof references a profesorado (codprof).
+	d.Introduce datos en las tablas y campos creados para hacer pruebas.
+    
+    */
+    
+    alter table alumnos 
+		add column dnialum char(9) null;
+        
+	create table profesorado
+(
+	codprof int, 
+	nomprof varchar(60) not null, 
+	ape1prof varchar(60) not null, 
+	ape2prof varchar(60) null, 
+	dniprof char(9) not null,
+    constraint pk_profesorado primary key (codprof)
+);
+
+alter table materias
+	add column codprof int,
+	add constraint fk_materias_profesorado foreign key (codprof) references profesorado(codprof);
+    /*
+    
+9.Comprueba que un profesor no se matricule de las materias que imparte.
+  before insert on matriculas
+ si el dni del alumno = dni profesor que imparte la materia de la matricula entonces
+  provocar error
+  
+*/
+
+-- 10.La fecha de publicación de un test no puede ser anterior a la de creación.
+
+ drop trigger if exists compruebafechatest;
+delimiter $$
+create trigger compruebafechatest
+	before insert on tests
+for each row
+begin
+	if new.fecpublic < new.feccreacion then
+		signal sqlstate '45000' set message_text = 'la fecha de publicación no puede ser anterior a la de creación';
+	end if;
+end $$
+delimiter ;
+
+drop trigger if exists compruebafechatestEditar;
+delimiter $$
+create trigger compruebafechatestEditar
+	before update on tests
+for each row
+begin
+	if (new.fecpublic <> old.fecpublic or new.feccreacion <> old.feccreacion) -- si lo que han cambiado son las fechas de creación o publicación
+		and new.fecpublic < new.feccreacion then
+		signal sqlstate '45000' set message_text = 'la fecha de publicación no puede ser anterior a la de creación';
+	end if;
+end $$
+delimiter ;       
+       
+
+-- 11.El alumnado no podrá hacer más de una vez un test (ya existe el registro de dicho test para el alumno/a) si dicho test no es repetible (tests.repetible = 0|false).
+
+drop trigger if exists compruebarepeticiontestsalumno;
+delimiter $$
+create trigger compruebarepeticiontestsalumno
+	before insert on respuestas
+for each row
+begin
+	if (select repetible from tests where codtest = new.codtest) = false and
+	  (select count(*) from respuestas where codtest = new.codtest and numexped = new.numexped) > 0 then
+		signal sqlstate '45000' set message_text = 'el test no se puede repetir';
+	end if;
+end $$
+delimiter ;
+
+
+    
+    
+    
+    
