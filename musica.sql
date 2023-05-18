@@ -29,14 +29,18 @@ CREATE TABLE Grabacion (
   CONSTRAINT fk_instrumento_grabacion FOREIGN KEY (idInstrumento) REFERENCES Instrumento(idInstrumento)
 );
 
+delete from Grabacion;
+delete from Musico;
+delete from Instrumento ;
 
-INSERT INTO Instrumento (nombre, tipo)
-VALUES ('Guitarra', 'Cuerda');
 
-INSERT INTO Musico (nombre, genero, idInstrumento)
-VALUES ('John Smith', 'Rock', 1);
+INSERT INTO Instrumento ( IdInstrumento,nombre, tipo)
+VALUES (1,'Guitarra', 'Cuerda');
 
-INSERT INTO Grabacion (titulo, fecha, idInstrumento)
-VALUES ('Sweet Child O'' Mine', '1987-08-17', 1);
+INSERT INTO Musico (idMusico,nombre, genero, idInstrumento)
+VALUES (1,'John Smith', 'Rock', 1);
+
+INSERT INTO Grabacion (idGrabacion,titulo, fecha, idInstrumento)
+VALUES (1,'Sweet Child O'' Mine', '1987-08-17', 1);
 
 
