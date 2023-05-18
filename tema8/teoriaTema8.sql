@@ -126,7 +126,8 @@ _ --> un caracter y solo uno en una posicion determinda (en la que posiciono el 
 
 ^ --> que empiece por 
 $ --> que termine por
-
+(a|b|c)---> separa opciones
+[0-9] ----> numeros del 0 al 9
 REGEXP: Esta expresión se utiliza para realizar una búsqueda de patrones utilizando expresiones regulares.
 Por ejemplo, SELECT * FROM tabla WHERE columna REGEXP 'patrón';
 
