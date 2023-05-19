@@ -20,6 +20,17 @@ CREATE TABLE Musico (
   CONSTRAINT fk_instrumento_musico FOREIGN KEY (idInstrumento) REFERENCES Instrumento(idInstrumento)
 );
 
+CREATE TABLE Biografia (
+  idBiografia INT auto_increment,
+  descripcion TEXT,
+  fechaNacimiento DATE,
+  lugarNacimiento VARCHAR(50),
+  idMusico INT,
+  CONSTRAINT pk_biografia PRIMARY KEY (idBiografia),
+  CONSTRAINT fk_musico_biografia FOREIGN KEY (idMusico) REFERENCES Musico(idMusico)
+);
+
+
 CREATE TABLE Grabacion (
   idGrabacion INT auto_increment,
   titulo VARCHAR(50),
@@ -39,6 +50,10 @@ VALUES (1,'Guitarra', 'Cuerda');
 
 INSERT INTO Musico (idMusico,nombre, genero, idInstrumento)
 VALUES (1,'John Smith', 'Rock', 1);
+
+INSERT INTO Biografia (descripcion, fechaNacimiento, lugarNacimiento, idMusico)
+VALUES ('Roquero Vieja escuela', '1990-01-01', 'Madrid', 1);
+
 
 INSERT INTO Grabacion (idGrabacion,titulo, fecha, idInstrumento)
 VALUES (1,'Sweet Child O'' Mine', '1987-08-17', 1);
