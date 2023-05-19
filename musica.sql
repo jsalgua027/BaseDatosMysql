@@ -40,9 +40,9 @@ CREATE TABLE Grabacion (
   CONSTRAINT fk_instrumento_grabacion FOREIGN KEY (idInstrumento) REFERENCES Instrumento(idInstrumento)
 );
 
-delete from Grabacion;
-delete from Musico;
-delete from Instrumento ;
+-- delete from Grabacion;
+-- delete from Musico;
+-- delete from Instrumento ;
 
 
 INSERT INTO Instrumento ( IdInstrumento,nombre, tipo)
