@@ -114,7 +114,7 @@ create trigger eje2
 	before insert on dirigir
 for each row
 begin
-		  if new.numdepto <> (select departamentos.numde from departamentos join empleados where numem = new.numempdirec )   then 
+		  if new.numdepto <> (select departamentos.numde from departamentos join empleados on departamentos.numde= empleados.numde where numem = new.numempdirec )   then 
 		signal sqlstate '45000' set message_text = 'el departamento que va a dirigir es distinto';
 	end if;
 end $$
@@ -123,7 +123,7 @@ delimiter ;
 insert into dirigir
 	(numdepto, numempdirec, fecinidir, fecfindir, tipodir)
 values
-	(35,2,'2021-12-12','2024-12-12','P');
+	(42,2,'2021-12-12','2024-12-12','P');
 
 -- 3.Añade lo que consideres oportuno para que las comprobaciones anteriores se hagan también cuando se modifiquen la fecha de nacimiento de un empleado o al director/a de un departamento.
 -- A
