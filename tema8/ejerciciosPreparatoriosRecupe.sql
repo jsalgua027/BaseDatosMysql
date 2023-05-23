@@ -229,3 +229,50 @@ begin
          
 end $$
 delimiter ;
+
+-- base de datos gestiona test
+
+/*
+8.El profesorado también puede matricularse en nuestro centro pero no de las materias que imparte. Para ello tendrás que hacer lo sigjuiente:
+a.Añade el campo dni en la tabla de alumnado.
+b.Añade la tabla profesorado (codprof, nomprof, ape1prof, ape2prof, dniprof).
+c.Añade una clave foránea en materias ⇒ codprof references a profesorado (codprof).
+d.Introduce datos en las tablas y campos creados para hacer pruebas.
+9.Comprueba que un profesor no se matricule de las materias que imparte.
+before insert on matriculas
+si el dni del alumno = dni profesor que imparte la materia de la matricula entonces
+	provocar error
+10.La fecha de publicación de un test no puede ser anterior a la de creación.
+11.El alumnado no podrá hacer más de una vez un test (ya existe el registro de dicho test para el alumno/a) si dicho test no es repetible (tests.repetible = 0|false).
+
+*/
+/*
+delimiter $$
+drop trigger if exists eje9$$
+create trigger eje9
+before insert on  matriculas
+for each row
+begin
+	if  () then
+    signal sqlstate '45000' set message_text = 'el profesor no puede matricularse en las misma materias que imparte';
+	end if;
+    
+end $$
+delimiter ;
+
+
+insert into profesorado
+(codprof, nomprof, ape1prof, ape2prof, dniprof)
+values
+( 1, 'nacho', 'sal', 'gua','123456789');
+
+insert into alumnos
+(numexped, nomalum, ape1alum, ape2alum, fecnacim, observaciones, calle, poblacion, codpostal, email, telefono, nomuser, dnialum)
+values
+(2525,'nacho', 'sal', 'gua', '1981-02-15', 'prueba', 'calle','madrid', '12345', '12345@789789', '956651262','12345678', '123456789');
+
+insert into materias
+(codmateria, nommateria,cursomateria, codprof)
+values
+(55, 'preuba','1234', '123456789');
+/*
