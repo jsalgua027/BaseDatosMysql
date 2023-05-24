@@ -20,10 +20,10 @@ ventas
 -->cuando queden  menos de 5 unidadfes de stock quiero hacer pedido autoatico de cinco unidades
 
 before insert de aqui es donde hago la comprobacion detalleventas
-after insert detalleventa
+after insert detalleventa  insert es nuevo
 
-after update prodcutos
-
+after update prodcutos      update es agregar o modificar algo existente
+ 
 
   -----------------------------------------------------------------------------Trigger 
    delimiter $$
@@ -61,21 +61,48 @@ end $$
 delimiter ;
    
    
+   /*
+signals con 01xxx provocan warnings-----------OJo
+signals con otro provoca errores---------------OJO
+
+drop trigger mitrigger;
+DELIMITER $$
+CREATE TRIGGER mitrigger
+ BEFORE UPDATE ON departamentos
+FOR EACH ROW
+BEGIN
+-- 	DECLARE numero int;
+	if (new.presude < old.presude) then
+		begin
+			set new.presude = old.presude;
+            -- SIGNAL SQLSTATE '01000' SET MESSAGE_TEXT = 'El presupuesto no se modificará';
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El presupuesto no se modificará';
+		end;
+	end if;
+END $$
+DELIMITER ;
+   
+   
 */
 
 /*
 -------------------------------------------------------------------------------------------EVENTOS 
+/*
+EVENTOS PASO A PASO
+
 delimiter $$
-create event actualizaNumeroEmpleados
+create event (nombre)
 on schedule
-	every 1 quarter
-    starts '2022/6/1'
+	every (numero) (unidad temporal)
+    starts '(fecha de inicio)'
+    ends (fecha de fin)
 do
 	begin
-		call sumaEmpleados();
+		(llamada a un método o código)
     end $$
     
 delimiter ;
+
 Intervalos de tiempo
 	
 SEGUNDO: Se utiliza para especificar intervalos de tiempo en segundos. 
@@ -111,6 +138,28 @@ DAY_HOUR: Se utiliza para especificar intervalos de tiempo en días y horas.
 DAY_MINUTE: Este intervalo se utiliza para especificar intervalos de tiempo en días y minutos. 
 Por ejemplo, INTERVAL '3 30:00' DAY_MINUTE representa un intervalo de 3 días y 30 minutos.
 
+
+----------------------------
+EJEMPLO
+Se ha elaborado un procedimiento “OptimizaCatalogosPromos”. Nos piden que hagamos lo que consideremos 
+oportuno para que se ejecute cada semestre (2 trimestres) durante el próximo año. 
+Para comenzar nos piden que lo dejemos preparado para que, desde hoy martes,  
+comience a ejecutarse el domingo a las 00.00h.
+
+Create event ejer_g1_3
+
+on schedule
+
+every 2 quarter
+-- every 6 month
+	-- starts curdate() + interval 3 day
+    -- starts curdate() + interval '5 0' day_hour
+    starts '2021-05-28 17:00'
+    -- ends curdate() + interval '5 0' day_hour + interval 1 year
+    ends '2022-05-28 17:00' + interval 1 year
+do call OptimizaCatalogosPromos();
+
+
 */
 /*
 ------------------------------------------------------------------------------------------------------------expresiones regulares
@@ -121,13 +170,19 @@ selec *
 from centros
 where dirce like '%ATOCHA%'
 
-% --> cualquier cadena incluida la cadena vacia
-_ --> un caracter y solo uno en una posicion determinda (en la que posiciono el simbolo)
+[not] Like -> es el operador básico para usar regexs
+% es como el * del sistema operativo -> Es cualquier cadena
+_ es como el ? del sistema operativo -> Cualquier caracter
+^ -> cadenas que empiecen por un caracter determinado
+$ -> cadenas que terminen por un caracter determinado
+(a|b|c) -> | separa las opciones es como poner o
+[0-9] números del 0 al 9
+^[XY] que empiece por X o Y
+^ dentro del corchete sirve para negar
+[]{n} -> Siendo n el número de coincidencias del caracter dentro del corchete
 
-^ --> que empiece por 
-$ --> que termine por
-(a|b|c)---> separa opciones
-[0-9] ----> numeros del 0 al 9
+----------
+
 REGEXP: Esta expresión se utiliza para realizar una búsqueda de patrones utilizando expresiones regulares.
 Por ejemplo, SELECT * FROM tabla WHERE columna REGEXP 'patrón';
 

@@ -389,7 +389,54 @@ end $$
 delimiter ;
 
 
+-- 6.Prepara un evento que, cada trimestre, compruebe si hay algún departamento sin director actual, en cuyo caso mostraremos un mensaje con todos los departamentos sin director.
+delimiter $$
+drop procedure if exists  direcDepar$$
+create procedure direcDepar()
+begin
+	declare deparSin int; 
+    set deparSin = (select count(*)from dirigir where numdepto= null);
+		if deparsin > 0 then   signal sqlstate '01000' set message_text = 'Hay departamentos sin direccion';
+        end if;
+end$$
+delimiter ;
 
+insert into dirigir
+(numdepto, numempdirec, fecinidir, fecfindir, tipodir)
+values
+( 1, 1206, '2008-01-03', null, 'P')
 
+delimiter $$
+drop event if exists  direcD$$
+create event direcD
+on schedule
+every 1 quarter
+do
+begin 
+call direcDepar();
+end $$
+delimiter ;
 
+-- 7.Crea un evento que, al comienzo de cada año, compruebe los empleados jubilados hace diez años o más y los elimine de la base de datos (haz una copia antes de ejecutar este apartado). Deberá eliminar, también, los registros de la tabla dirigir asociados a estos empleados.
 
+delimiter $$
+drop procedure if exists  jubilado$$
+create procedure jubilado()
+begin
+	if (select * from empleados where fechaJubi> date_add(curdate(), interval 10 year))then 
+    delete from empleados;
+    end if;
+end$$
+delimiter ;
+
+delimiter $$
+drop event if exists  ju$$
+create event ju
+on schedule
+every 1 year
+starts '2024-01-01'
+do
+begin 
+call jubilado();
+end $$
+delimiter ;
