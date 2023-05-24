@@ -276,3 +276,120 @@ insert into materias
 values
 (55, 'preuba','1234', '123456789');
 /*
+
+/*
+
+Utiliza la base de datos BDALMACEN
+
+1.Hemos detectado que hay usuarios que consiguen que el precio del pedido sea negativo,
+ con lo cual no se hace un cobro del cliente sino un pago, por esta razón hemos decidido comprobar el precio del pedido
+ y hacer que siempre sea un valor positivo.
+2.Cuando vendemos un producto:
+  a.Comprobar si tenemos suficiente stock para ello, si no es así, mostraremos un mensaje de no disponibilidad.
+b.Si tenemos suficiente stock, se hará la venta y se disminuirá de forma automática el stock de dicho producto.
+3.Queremos que, cuando queden menos de 5 unidades almacenadas  en nuestro almacén, se realice un pedido automático a nuestro proveedor.
+
+4.Añade una columna de tipo bit para indicar los empleados jubilados y otra con la fecha de jubilación.
+5.Cuando un empleado se jubila, si es director de algún departamento, debe aparecer un mensaje que recuerde que debemos buscar un nuevo director para ese departamento.
+6.Prepara un evento que, cada trimestre, compruebe si hay algún departamento sin director actual, en cuyo caso mostraremos un mensaje con todos los departamentos sin director.
+7.Crea un evento que, al comienzo de cada año, compruebe los empleados jubilados hace diez años o más y los elimine de la base de datos (haz una copia antes de ejecutar este apartado). Deberá eliminar, también, los registros de la tabla dirigir asociados a estos empleados.
+8.Crea un evento anual que incremente en un 2,5% el salario de los empleados no jubilados. Este evento se creará deshabilitado.
+
+
+*/
+
+
+/*
+1.Hemos detectado que hay usuarios que consiguen que el precio del pedido sea negativo,
+ con lo cual no se hace un cobro del cliente sino un pago, por esta razón hemos decidido comprobar el precio del pedido
+ y hacer que siempre sea un valor positivo.
+*/
+
+
+delimiter $$
+drop trigger if exists eje1Almacen$$
+create trigger eje1Almacen
+	 before insert  on pedidos
+for each row
+begin
+		if ( select preciounidad from productos  where codproducto = pedidos.codproducto) <0 then 
+          update productos
+          set new.preciounidad = abs(old.preciounidad);
+          signal sqlstate '01000' set message_text = 'ojo con el valor del producto';
+	end if;
+end $$
+delimiter ;
+
+
+
+
+/*
+2.Cuando vendemos un producto:
+  a.Comprobar si tenemos suficiente stock para ello, si no es así, mostraremos un mensaje de no disponibilidad.
+b.Si tenemos suficiente stock, se hará la venta y se disminuirá de forma automática el stock de dicho producto.
+
+*/
+
+delimiter $$
+drop trigger if exists eje2Almacen$$
+create trigger eje2Almacen
+	 before update on productos
+for each row
+begin
+		  if (pedidos.cantidad > (select stock from productos join pedidos on productos.codproducto= pedidos.codproducto  where codproducto= pedidos.codproducto))then
+          
+          signal sqlstate '45000' set message_text = 'no hay stock suficiente';
+          else 
+          update productos
+          set new.stock = old.stock-pedidos.cantidad;
+          
+	end if;
+end $$
+delimiter ;
+
+-- 3.Queremos que, cuando queden menos de 5 unidades almacenadas  en nuestro almacén, se realice un pedido automático a nuestro proveedor.
+delimiter $$
+drop trigger if exists eje3Almacen$$
+create trigger eje3Almacen
+	 after insert on pedidos
+for each row
+begin
+		  if (select productos.stock from productos join pedidos on productos.codproducto = pedidos.codproducto where productos.codproducto= pedidos.codproducto )<5 then
+          update productos
+          set stock = stock+5;
+          signal sqlstate '01000' set message_text = 'Hay menos de cinco hacemos pedido';
+          
+          
+          
+	end if;
+end $$
+delimiter ;
+
+-- 4.Añade una columna de tipo bit para indicar los empleados jubilados y otra con la fecha de jubilación.
+
+alter table empleados
+add column jubilado bit,
+add column fechaJubi date;
+
+-- 5.Cuando un empleado se jubila, si es director de algún departamento, debe aparecer un mensaje que recuerde que debemos buscar un nuevo director para ese departamento.
+
+delimiter $$
+drop trigger if exists eje3Empresa$$
+create trigger eje3Empresa
+	 before update on empleados
+for each row
+begin
+		  if ((empleados.fechaJubi= curdate())and empleados.numem in (select dirigir.numempdirec from dirigir join empleados on dirigir.numempdirec = empleados.numem)) then
+          signal sqlstate '01000' set message_text = 'Necesitamos nuevo director';
+          
+          
+          
+	end if;
+end $$
+delimiter ;
+
+
+
+
+
+
