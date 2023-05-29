@@ -3,50 +3,21 @@
 -- DROP DATABASE IF EXISTS "Sintaxis";
 
 
+insert into enunciados
+	(codenunciado, texto)
+values
+	(1, 'Prueba1'),
+	(2, 'Prueba2'),
+	(3, 'Prueba3');
+	
+insert into oraciones
+	(codenunciado, texto, codoracion, verbo)
+values
+	(1, 'Me compré una bicicleta', 1, 'comprar'),
+	(2, 'Mañana nos vamos de campamento', 2, 'ir');
 
-CREATE TABLE IF NOT EXISTS Estructura (
-    codEstructura INT,
-    desEstructura VARCHAR(200),
-    CONSTRAINT PK_Estructura PRIMARY KEY (codEstructura)
-);
-
-CREATE TABLE IF NOT EXISTS NaturalezaPredicado (
-    codNaturalezaPredi INT,
-    vozVerbo VARCHAR(30),
-    verboCopulativo BOOLEAN,
-    transitividad BOOLEAN,
-    CONSTRAINT PK_NaturalezaPredicado PRIMARY KEY (codNaturalezaPredi)
-);
-
-CREATE TABLE IF NOT EXISTS ActitudHablante (
-    codActitudHablante INT,
-    desActitudHablante VARCHAR(100),
-    CONSTRAINT PK_ActitudHablante PRIMARY KEY (codActitudHablante)
-);
-
-CREATE TABLE IF NOT EXISTS Enunciado (
-    codEnunciado SERIAL,
-    codEstructura INT,
-    codNaturalezaPredi INT,
-    texto VARCHAR(200) NOT NULL,
-    tipo CHAR(1) CHECK (tipo IN ('A', 'B')),
-    CONSTRAINT PK_Enunciado PRIMARY KEY (codEnunciado),
-    CONSTRAINT FK_Enunciado_estructura FOREIGN KEY (codEstructura)
-        REFERENCES Estructura (codEstructura)
-        ON DELETE NO ACTION ON UPDATE CASCADE,
-    CONSTRAINT FK_Enunciado_NaturalezaPre FOREIGN KEY (codNaturalezaPredi)
-        REFERENCES NaturalezaPredicado (codNaturalezaPredi)
-);
-
-CREATE TABLE IF NOT EXISTS detalleActitud (
-    codEnunciado INT,
-    codActitudHablante INT,
-    descActitud VARCHAR(200),
-    CONSTRAINT PK_detalleActitud PRIMARY KEY (codEnunciado, codActitudHablante),
-    CONSTRAINT FK_detalleActitud_Enunciado FOREIGN KEY (codEnunciado)
-        REFERENCES Enunciado (codEnunciado)
-        ON DELETE NO ACTION ON UPDATE CASCADE,
-    CONSTRAINT FK_detalleActitud_ActitudHablante FOREIGN KEY (codActitudHablante)
-        REFERENCES ActitudHablante (codActitudHablante)
-        ON DELETE NO ACTION ON UPDATE CASCADE
-);
+insert into frases
+	(codenunciado, texto, codfrase, observaciones)
+values
+	(2, 'Mañana nos vamos de campamento', 1, 'ir'),
+	(3, '¡Por dios!', 2, 'Exclamación');
